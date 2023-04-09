@@ -53,6 +53,7 @@ using NINA.Equipment.Equipment.MyPlanetarium;
 using NINA.Profile;
 using NINA.WPF.Base.Mediator;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
+using FlatFiles.TypeMapping;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
     [ExportMetadata("Name", "NEOCP object list container")]
