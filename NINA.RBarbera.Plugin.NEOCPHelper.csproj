@@ -83,9 +83,6 @@
     <Reference Include="Fastenshtein, Version=1.0.0.8, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Fastenshtein.1.0.0.8\lib\net452\Fastenshtein.dll</HintPath>
     </Reference>
-    <Reference Include="FlatFiles, Version=5.0.4.0, Culture=neutral, PublicKeyToken=6de75c8785df4020, processorArchitecture=MSIL">
-      <HintPath>packages\FlatFiles.5.0.4\lib\net451\FlatFiles.dll</HintPath>
-    </Reference>
     <Reference Include="Google.Protobuf, Version=3.18.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>packages\Google.Protobuf.3.18.1\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
@@ -273,6 +270,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\NEOCPDeepSkyObject.cs" />
     <Compile Include="Models\NEOCPTarget.cs" />
     <Compile Include="Models\NEOCPInputTarget.cs" />
     <Compile Include="NeocpHelper.cs" />

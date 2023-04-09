@@ -108,13 +108,6 @@
                     TrackerFormatString="X: {2:HH:mm}h&#x0a;Y: {4:0.00}&#176;"
                     Color="{Binding Path=Color, Source={StaticResource ButtonBackgroundBrush}}" />
 
-                <oxy:LineSeries
-                    DataFieldX="Key"
-                    DataFieldY="Value"
-                    ItemsSource="{Binding LightCurve}"
-                    TrackerFormatString="X: {2:HH:mm}h&#x0a;Y: {4:0.00}&#176;"
-                    Color="{Binding Path=Color, Source={StaticResource PrimaryBrush}}" />
-
                 <oxy:AreaSeries
                     DataFieldX="Key"
                     DataFieldY="Value"

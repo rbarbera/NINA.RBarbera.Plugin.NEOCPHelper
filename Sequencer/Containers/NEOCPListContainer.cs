@@ -53,7 +53,6 @@ using NINA.Equipment.Equipment.MyPlanetarium;
 using NINA.Profile;
 using NINA.WPF.Base.Mediator;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
-using FlatFiles.TypeMapping;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
     [ExportMetadata("Name", "NEOCP object list container")]
@@ -88,6 +87,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
             LoadTargetsCommand = new AsyncCommand<bool>(LoadTargets);
 
+            NEOCPDSO = new NEOCPDeepSkyObject(string.Empty, new Coordinates(Angle.Zero, Angle.Zero, Epoch.J2000), string.Empty, profileService.ActiveProfile.AstrometrySettings.Horizon);
+
+            NEOCPTargets = new AsyncObservableCollection<NEOCPTarget>();
+
             NEOCPInputTarget = new NEOCPInputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon);
 
         }
@@ -113,6 +116,57 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
         }
 
         public NighttimeData NighttimeData { get; private set; }
+
+        private AsyncObservableCollection<NEOCPTarget> _neocpTargets;
+
+        public AsyncObservableCollection<NEOCPTarget> NEOCPTargets {
+            get {
+                return _neocpTargets;
+            }
+            set {
+                _neocpTargets = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private NEOCPTarget _SelectedNEO;
+
+        [JsonProperty]
+        public NEOCPTarget SelectedNEO {
+            get {
+                return _SelectedNEO;
+            }
+            set {
+                _SelectedNEO = value;
+                LoadSingleTarget();
+                RaisePropertyChanged();
+            }
+        }
+
+        private NEOCPDeepSkyObject _neocpDSO;
+
+        [JsonProperty]
+        public NEOCPDeepSkyObject NEOCPDSO {
+            get {
+                return _neocpDSO;
+            }
+            set {
+                _neocpDSO = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private void LoadSingleTarget() {
+            if (SelectedNEO != null && SelectedNEO?.Designation != null) {
+                Target.TargetName = SelectedNEO.Designation;
+                Target.InputCoordinates.Coordinates = SelectedNEO.Coordinates();
+                Target.DeepSkyObject.Coordinates = SelectedNEO.Coordinates();
+
+                NEOCPDSO.Coordinates = SelectedNEO.Coordinates();
+                NEOCPDSO.Magnitude = SelectedNEO.V;
+                AfterParentChanged();
+            }
+        }
 
         public override object Clone() {
             var clone = new NEOCPListContainer(ProfileService, NighttimeCalculator, FramingAssistantVM, ApplicationMediator, PlanetariumFactory) {
@@ -154,50 +208,32 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
         private Task<bool> LoadTargets(object obj) {
             LoadingTargets = true;
 
-            // ExoPlanetTargets.Clear();
-            //ExoPlanetTargetsList.Clear();
-
             return Task.Run(() => {
-                /*
-                switch (exoPlanetsPlugin.TargetList) {
-                    case 0:
-                        RetrieveTargetsFromSwarthmore(0);
-                        break;
-                    case 1:
-                        RetrieveTargetsFromSwarthmore(2);
-                        break;
-                    case 2:
-                        RetrieveTargetsFromExoClock();
-                        break;
-                    case 3:
-                        RetrieveTargetsFromSwarthmore(3);
-                        break;
-                }
-
-                retrievedTargets = ExoPlanetTargets.Count();
-                PreFilterTargets();
-                SearchExoPlanetTargets(null);
-                */
-                var result = getNEOCPList();
+                NEOCPTargets = getNEOCPList();
                 LoadingTargets = false;
+                SelectedNEO = NEOCPTargets.First();
+                LoadSingleTarget();
                 AfterParentChanged();
                 return true;
             });
         }
 
-        private List<NEOCPTarget> getNEOCPList() {
+        private AsyncObservableCollection<NEOCPTarget> getNEOCPList() {
             var url = $"https://minorplanetcenter.net/iau/NEO/neocp.txt";
             WebRequest request = WebRequest.Create(url);
             request.Timeout = 30 * 60 * 1000;
             request.UseDefaultCredentials = true;
             request.Proxy.Credentials = request.Credentials;
             WebResponse response = (WebResponse)request.GetResponse();
-
+           
+            var list = new AsyncObservableCollection<NEOCPTarget>();
             using (var sr = new StreamReader(response.GetResponseStream(), Encoding.UTF8)) {
-                var content = sr.ReadToEnd(); 
-                Console.WriteLine(sr.ReadToEnd());
-                return new List<NEOCPTarget>();
+                string line;
+                while ((line = sr.ReadLine()) != null) {
+                    list.Add(new NEOCPTarget(line));
+                }
             }
+            return list;
         }
     }
 }

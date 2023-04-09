@@ -220,10 +220,6 @@
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <StackPanel
@@ -265,10 +261,30 @@
                                             LoadingImageBrush="{StaticResource ButtonForegroundBrush}" />
                                 </StackPanel>
                             </StackPanel>
-                            <DataGrid Grid.Row="1">
-                                
-                            </DataGrid>
+                            <DataGrid 
+                                Grid.Row="1" 
+                                ItemsSource="{Binding NEOCPTargets}" 
+                                AutoGenerateColumns="False" 
+                                IsReadOnly="True"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow"
+                                SelectedValue="{Binding SelectedNEO}"
+                                MaxHeight="180">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header=" Designation " Binding="{Binding Designation}" />
+                                    <DataGridTextColumn Header=" Score " Binding="{Binding Score}" />
+                                    <DataGridTextColumn Header=" Discovery " Binding="{Binding Discovery}" />
+                                    <DataGridTextColumn Header=" RA " Binding="{Binding RA}" />
+                                    <DataGridTextColumn Header=" Dec " Binding="{Binding Dec}" />
+                                    <DataGridTextColumn Header=" V " Binding="{Binding V}" />
+                                    <DataGridTextColumn Header=" Note " Binding="{Binding Note}" />
+                                    <DataGridTextColumn Header=" NObs " Binding="{Binding NObs}" />
+                                    <DataGridTextColumn Header=" Arc " Binding="{Binding Arc}" />
+                                    <DataGridTextColumn Header=" H " Binding="{Binding H}" />
+                                    <DataGridTextColumn Header=" Not seen in/days " Binding="{Binding NotSeenIn}" />
 
+                                </DataGrid.Columns>
+                            </DataGrid>
                             <alt:AltitudeChart
                                     Grid.Row="0"
                                     Grid.RowSpan="5"
@@ -277,7 +293,7 @@
                                     Margin="10,0,0,0"
                                     HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Stretch"
-                                    DataContext="{Binding ExoPlanetDSO}"
+                                    DataContext="{Binding NEOCPDSO}"
                                     NighttimeData="{Binding Source={StaticResource nighttimeProxy}, Path=Data}" />
                         </Grid>
                     </ninactrl:DetachingExpander>
