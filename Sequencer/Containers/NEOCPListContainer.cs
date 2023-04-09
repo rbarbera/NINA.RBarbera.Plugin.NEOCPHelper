@@ -12,6 +12,7 @@
 
 #endregion "copyright"
 
+using Microsoft.Expression.Interactivity.Core;
 using Newtonsoft.Json;
 using NINA.Sequencer.Container;
 using NINA.Sequencer.Conditions;
@@ -23,6 +24,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using NINA.Astrometry;
@@ -83,9 +85,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
             Task.Run(() => NighttimeData = nighttimeCalculator.Calculate(DateTime.Now.AddHours(4)));
 
+            LoadTargetsCommand = new AsyncCommand<bool>(LoadTargets);
+
             NEOCPInputTarget = new NEOCPInputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon);
 
         }
+
+        public ICommand LoadTargetsCommand { get; set; }
 
         private NEOCPInputTarget _target;
         public NEOCPInputTarget NEOCPInputTarget {
@@ -93,11 +99,11 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             set {
                 _target = value;
                 RaisePropertyChanged();
-            } 
+            }
         }
 
-        public InputTarget Target { 
-            get => NEOCPInputTarget; 
+        public InputTarget Target {
+            get => NEOCPInputTarget;
             set {
                 NEOCPInputTarget.TargetName = value.TargetName;
                 NEOCPInputTarget.InputCoordinates = value.InputCoordinates;
@@ -133,6 +139,64 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
 
             return clone;
+        }
+
+        private Boolean _LoadingTargets = false;
+        public Boolean LoadingTargets {
+            get { return _LoadingTargets; }
+            set {
+                _LoadingTargets = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private Task<bool> LoadTargets(object obj) {
+            LoadingTargets = true;
+
+            // ExoPlanetTargets.Clear();
+            //ExoPlanetTargetsList.Clear();
+
+            return Task.Run(() => {
+                /*
+                switch (exoPlanetsPlugin.TargetList) {
+                    case 0:
+                        RetrieveTargetsFromSwarthmore(0);
+                        break;
+                    case 1:
+                        RetrieveTargetsFromSwarthmore(2);
+                        break;
+                    case 2:
+                        RetrieveTargetsFromExoClock();
+                        break;
+                    case 3:
+                        RetrieveTargetsFromSwarthmore(3);
+                        break;
+                }
+
+                retrievedTargets = ExoPlanetTargets.Count();
+                PreFilterTargets();
+                SearchExoPlanetTargets(null);
+                */
+                var result = getNEOCPList();
+                LoadingTargets = false;
+                AfterParentChanged();
+                return true;
+            });
+        }
+
+        private List<NEOCPTarget> getNEOCPList() {
+            var url = $"https://minorplanetcenter.net/iau/NEO/neocp.txt";
+            WebRequest request = WebRequest.Create(url);
+            request.Timeout = 30 * 60 * 1000;
+            request.UseDefaultCredentials = true;
+            request.Proxy.Credentials = request.Credentials;
+            WebResponse response = (WebResponse)request.GetResponse();
+
+            using (var sr = new StreamReader(response.GetResponseStream(), Encoding.UTF8)) {
+                var content = sr.ReadToEnd(); 
+                Console.WriteLine(sr.ReadToEnd());
+                return new List<NEOCPTarget>();
+            }
         }
     }
 }
