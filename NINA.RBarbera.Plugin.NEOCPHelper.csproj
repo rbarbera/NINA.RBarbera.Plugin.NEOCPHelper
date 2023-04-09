@@ -270,14 +270,11 @@
     <Compile Include="Models\NEOCPInputTarget.cs" />
     <Compile Include="NeocpHelper.cs" />
     <Compile Include="Sequencer\Containers\NEOCPListContainer.cs" />
-    <Compile Include="Sequencer\Test\NeocpHelperCondition.cs" />
-    <Compile Include="Sequencer\Test\NeocpHelperTrigger.cs" />
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sequencer\Test\NeocpHelperInstruction.cs" />
-    <Compile Include="Sequencer\NeocpHelperTemplates.xaml.cs">
+    <Compile Include="Sequencer\Containers\NeocpHelperTemplates.xaml.cs">
       <DependentUpon>NeocpHelperTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
@@ -285,6 +282,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Views\AltitudeChart.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -299,7 +297,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Sequencer\NeocpHelperTemplates.xaml">
+    <Page Include="Sequencer\Containers\NeocpHelperTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AltitudeChart.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

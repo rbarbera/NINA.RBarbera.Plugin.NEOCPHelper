@@ -55,7 +55,7 @@ using NINA.RBarbera.Plugin.NeocpHelper.Models;
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
     [ExportMetadata("Name", "NEOCP object list container")]
     [ExportMetadata("Description", "A container to choose a NEOCP target.")]
-    [ExportMetadata("Icon", "TelescopeSVG")]
+    [ExportMetadata("Icon", "Plugin_Test_SVG")]
     [ExportMetadata("Category", "Lbl_SequenceCategory_Container")]
     [Export(typeof(ISequenceItem))]
     [Export(typeof(ISequenceContainer))]
@@ -81,6 +81,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             this.FramingAssistantVM = framingAssistantVM;
             this.PlanetariumFactory = planetariumFactory;
 
+            Task.Run(() => NighttimeData = nighttimeCalculator.Calculate(DateTime.Now.AddHours(4)));
+
             NEOCPInputTarget = new NEOCPInputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon);
 
         }
@@ -103,7 +105,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
         }
 
-        public NighttimeData NighttimeData => throw new NotImplementedException();
+        public NighttimeData NighttimeData { get; private set; }
 
         public override object Clone() {
             var clone = new NEOCPListContainer(ProfileService, NighttimeCalculator, FramingAssistantVM, ApplicationMediator, PlanetariumFactory) {
