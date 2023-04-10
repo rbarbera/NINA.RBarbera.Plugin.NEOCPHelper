@@ -114,40 +114,40 @@
       <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nikoncswrapper, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.Equipment.2.0.2.9001\lib\net48\nikoncswrapper.dll</HintPath>
+      <HintPath>packages\NINA.Equipment.2.2.0.9001\lib\net48\nikoncswrapper.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.Astrometry, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.Astrometry.2.0.2.9001\lib\net48\NINA.Astrometry.dll</HintPath>
+    <Reference Include="NINA.Astrometry, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.Astrometry.2.2.0.9001\lib\net48\NINA.Astrometry.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.Core, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.Core.2.0.2.9001\lib\net48\NINA.Core.dll</HintPath>
+    <Reference Include="NINA.Core, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.Core.2.2.0.9001\lib\net48\NINA.Core.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.Equipment, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.Equipment.2.0.2.9001\lib\net48\NINA.Equipment.dll</HintPath>
+    <Reference Include="NINA.Equipment, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.Equipment.2.2.0.9001\lib\net48\NINA.Equipment.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.Image, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.Image.2.0.2.9001\lib\net48\NINA.Image.dll</HintPath>
+    <Reference Include="NINA.Image, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.Image.2.2.0.9001\lib\net48\NINA.Image.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.MGEN, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.MGEN.2.0.2.9001\lib\net48\NINA.MGEN.dll</HintPath>
+    <Reference Include="NINA.MGEN, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.MGEN.2.2.0.9001\lib\net48\NINA.MGEN.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.PlateSolving, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.PlateSolving.2.0.2.9001\lib\net48\NINA.PlateSolving.dll</HintPath>
+    <Reference Include="NINA.PlateSolving, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.PlateSolving.2.2.0.9001\lib\net48\NINA.PlateSolving.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.Plugin, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.Plugin.2.0.2.9001\lib\net48\NINA.Plugin.dll</HintPath>
+    <Reference Include="NINA.Plugin, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.Plugin.2.2.0.9001\lib\net48\NINA.Plugin.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.Profile, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.Profile.2.0.2.9001\lib\net48\NINA.Profile.dll</HintPath>
+    <Reference Include="NINA.Profile, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.Profile.2.2.0.9001\lib\net48\NINA.Profile.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.Sequencer, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.Sequencer.2.0.2.9001\lib\net48\NINA.Sequencer.dll</HintPath>
+    <Reference Include="NINA.Sequencer, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.Sequencer.2.2.0.9001\lib\net48\NINA.Sequencer.dll</HintPath>
     </Reference>
-    <Reference Include="NINA.WPF.Base, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINA.WPF.Base.2.0.2.9001\lib\net48\NINA.WPF.Base.dll</HintPath>
+    <Reference Include="NINA.WPF.Base, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINA.WPF.Base.2.2.0.9001\lib\net48\NINA.WPF.Base.dll</HintPath>
     </Reference>
-    <Reference Include="NINACustomControlLibrary, Version=2.0.2.9001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NINACustomControlLibrary.2.0.2.9001\lib\net48\NINACustomControlLibrary.dll</HintPath>
+    <Reference Include="NINACustomControlLibrary, Version=2.2.0.9001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NINACustomControlLibrary.2.2.0.9001\lib\net48\NINACustomControlLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Nito.AsyncEx.Context, Version=5.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Nito.AsyncEx.Context.5.1.2\lib\net461\Nito.AsyncEx.Context.dll</HintPath>
@@ -287,7 +287,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Views\AltitudeChart.xaml.cs" />
+    <Compile Include="View\AltitudeChart.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -306,7 +306,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\AltitudeChart.xaml">
+    <Page Include="View\AltitudeChart.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -340,7 +340,24 @@ if not exist "%25localappdata%25\NINA\Plugin\$(TargetName)" (
 )
 
 echo "Copying $(PlatformName) $(TargetFileName)"
-xcopy "$(TargetPath)" "%25localappdata%25\NINA\Plugins\$(TargetName)" /h/i/c/k/e/r/y
+
+if not exist "%25localappdata%25\NINA\Plugins" (
+    echo "Creating Plugins %25localappdata%25\NINA\Plugins folder"
+    mkdir  "%25localappdata%25\NINA\Plugins"
+)
+
+if exist "%25localappdata%25\NINA\Plugins\$(TargetName)" (
+    echo " folder cleanup"
+    rmdir "%25localappdata%25\NINA\Plugins\$(TargetName)" /S /Q
+)
+
+if not exist "%25localappdata%25\NINA\Plugins\$(TargetName)" (
+    echo "Creating %25localappdata%25\NINA\Plugin\$(TargetName) folder"
+    mkdir  "%25localappdata%25\NINA\Plugins\$(TargetName)"
+)
+
+copy "$(TargetDir)$(TargetFileName)" "%25localappdata%25\NINA\Plugins\$(TargetName)\$(TargetName).dll" /Y
+
 		</PostBuildEvent>
   </PropertyGroup>
   <Import Project="packages\Google.Protobuf.Tools.3.18.1\build\Google.Protobuf.Tools.targets" Condition="Exists('packages\Google.Protobuf.Tools.3.18.1\build\Google.Protobuf.Tools.targets')" />

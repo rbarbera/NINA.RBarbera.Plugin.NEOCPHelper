@@ -15,6 +15,7 @@
 using Newtonsoft.Json;
 using NINA.Core.Model;
 using NINA.Astrometry;
+using System.Diagnostics;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
     [JsonObject(MemberSerialization.OptIn)]
