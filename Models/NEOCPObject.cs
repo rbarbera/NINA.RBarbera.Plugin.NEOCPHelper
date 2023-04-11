@@ -38,6 +38,11 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
         public double speedRA { get; set; }
         public double speedDec { get; set; }
 
+        public double MaxExposure(double pixelScale, int spotSize) {
+            var speed = Math.Max(Math.Abs(speedRA), Math.Abs(speedDec));
+            return (pixelScale * spotSize) / speed * 60.0;
+        } 
+
         public List<NEOCPField> ComputeFields(DateTime startTime, DateTime endTime, double XSize, double YSize) {
             var raSpan = Math.Abs(XSize / speedRA);
             var decSpan = Math.Abs(YSize / speedDec);

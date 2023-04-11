@@ -55,6 +55,10 @@ using NINA.WPF.Base.Mediator;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
 using System.Diagnostics;
 using NINA.Equipment.Interfaces.Mediator;
+using NINA.Sequencer.Interfaces.Mediator;
+using System.Windows.Threading;
+using NINA.Sequencer.SequenceItem.Utility;
+using NINA.Sequencer.SequenceItem.Imaging;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
     [ExportMetadata("Name", "NEOCP object list container")]
@@ -67,6 +71,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
     internal class NEOCPListContainer : SequenceContainer, IDeepSkyObjectContainer {
 
         private readonly IProfileService profileService;
+        private readonly ISequenceMediator sequenceMediator;
         private readonly IFramingAssistantVM framingAssistantVM;
         private readonly IPlanetariumFactory planetariumFactory;
         private readonly IApplicationMediator applicationMediator;
@@ -76,12 +81,14 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
         [ImportingConstructor]
         public NEOCPListContainer(
                 IProfileService profileService,
+                ISequenceMediator sequenceMediator,
                 INighttimeCalculator nighttimeCalculator,
                 IFramingAssistantVM framingAssistantVM,
                 IApplicationMediator applicationMediator,
                 ICameraMediator cameraMediator,
                 IPlanetariumFactory planetariumFactory) : base(new SequentialStrategy()) {
             this.profileService = profileService;
+            this.sequenceMediator = sequenceMediator;
             this.nighttimeCalculator = nighttimeCalculator;
             this.applicationMediator = applicationMediator;
             this.framingAssistantVM = framingAssistantVM;
@@ -92,6 +99,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             Task.Run(() => NighttimeData = nighttimeCalculator.Calculate(DateTime.Now.AddHours(4)));
 
             LoadTargetsCommand = new AsyncCommand<bool>(LoadTargets);
+            CreateNEOFieldsCommand = new AsyncCommand<bool>(CreateDSOContainers);
 
             NEOCPInputTarget = new NEOCPInputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon);
             NEOCPDSO = new NEOCPDeepSkyObject(string.Empty, new Coordinates(Angle.Zero, Angle.Zero, Epoch.J2000), string.Empty, profileService.ActiveProfile.AstrometrySettings.Horizon);
@@ -100,8 +108,11 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             NEOCPTargets = new AsyncObservableCollection<NEOCPObject>();
 
         }
+        private Dispatcher _dispatcher = System.Windows.Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
 
         public ICommand LoadTargetsCommand { get; set; }
+        public ICommand CreateNEOFieldsCommand { get; set; }
+
 
         private NEOCPInputTarget _target;
         public NEOCPInputTarget NEOCPInputTarget {
@@ -176,6 +187,14 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
         }
 
+        public string RecomendedExposure {
+            get {
+                if (SelectedNEO == null)
+                    return "--";
+                return String.Format("{0:f0}s", SelectedNEO.MaxExposure(0.66, 4));
+            }
+        }
+
         private void LoadSingleTarget() {
             if (SelectedNEO != null && SelectedNEO?.Designation != null) {
                 var fl = profileService.ActiveProfile.TelescopeSettings.FocalLength;
@@ -203,8 +222,62 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
         }
 
+        public Task<bool> CreateDSOContainers() {
+            return Task<bool>.Run(() => {
+                if (SelectedNEO == null || NEOFields.Count == 0)
+                    return false;
+                IDeepSkyObjectContainer myTemplate = null;
+                var templates = sequenceMediator.GetDeepSkyObjectContainerTemplates();
+                myTemplate = templates.Where(tp => tp.Name == "NEOCP_FIELD_TEMPLATE_ADV").First();
+                var index = 1;
+                var exposureTime = Math.Floor(SelectedNEO.MaxExposure(0.66, 4));
+
+                foreach (NEOCPField field in NEOFields) {
+                    DeepSkyObjectContainer fieldContainer = (DeepSkyObjectContainer)myTemplate.Clone();
+                    fieldContainer.Target = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon) {
+                        TargetName = SelectedNEO.Designation + "_field_" + index,
+                        InputCoordinates = new InputCoordinates() {
+                            Coordinates = field.Center
+                        },
+                        Rotation = 0
+                    };
+                    fieldContainer.Name = SelectedNEO.Designation + "_field_" + index;
+                    fieldContainer.Items.ToList().ForEach(x => {
+                        if (x is WaitForTime waitForTime) {
+                            waitForTime.Hours = field.StartTime.Hour;
+                            waitForTime.Minutes = field.StartTime.Minute;
+                            waitForTime.Seconds = field.StartTime.Second;
+                        }
+                        if (x is NINA.Sequencer.Container.SequentialContainer sequencialContainer) {
+                            sequencialContainer.Conditions.ToList().ForEach(y => {
+                                if (y is TimeCondition timeCondition) {
+                                    timeCondition.Hours = field.EndTime.Hour;
+                                    timeCondition.Minutes = field.EndTime.Minute;
+                                    timeCondition.Seconds = field.EndTime.Second;
+                                }
+                            });
+                            sequencialContainer.Items.ToList().ForEach(y => {
+                                if (y is TakeExposure takeExposure) {
+                                    takeExposure.ExposureTime = exposureTime;
+                                }
+                            });
+                        };
+                    });
+                    
+                    index += 1;
+                    _ = _dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                        lock (Items) {
+                            this.InsertIntoSequenceBlocks(100, fieldContainer);
+                            Logger.Debug("Adding target container: " + fieldContainer);
+                        }
+                    }));
+                }
+                return true;
+            });           
+        }
+
         public override object Clone() {
-            var clone = new NEOCPListContainer(profileService, nighttimeCalculator, framingAssistantVM, applicationMediator, cameraMediator, planetariumFactory) {
+            var clone = new NEOCPListContainer(profileService, sequenceMediator, nighttimeCalculator, framingAssistantVM, applicationMediator, cameraMediator, planetariumFactory) {
                 Icon = Icon,
                 Name = Name,
                 Category = Category,

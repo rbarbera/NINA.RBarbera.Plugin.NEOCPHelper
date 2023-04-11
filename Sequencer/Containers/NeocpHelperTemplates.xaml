@@ -51,7 +51,7 @@
                                     Grid.Column="1"
                                     Width="20"
                                     Height="20"
-                                    Data="{StaticResource TelescopeSVG}"
+                                    Data="{StaticResource CalculatorSVG}"
                                     Fill="{StaticResource ButtonForegroundBrush}"
                                     Stretch="Uniform" />
                                 <ContentPresenter
@@ -160,7 +160,7 @@
                                     <TextBlock
                                             VerticalAlignment="Center"
                                             Foreground="{StaticResource ButtonForegroundBrush}"
-                                            Text="{ns:Loc LblTarget}" />
+                                            Text="NEOCP Planner" />
                                 </Border>
                                 <StackPanel Margin="5,0,0,0" Orientation="Horizontal">
                                     <TextBlock
@@ -219,6 +219,7 @@
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
@@ -280,8 +281,17 @@
                                     <DataGridTextColumn Header=" Dec arcsec/min " Binding="{Binding speedDec, StringFormat=\{0\,4:f3\}}" />
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <DataGrid 
-                                Grid.Row="2" 
+                            <StackPanel
+                                Orientation="Vertical"
+                                Grid.Row="2">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock 
+                                    Text="Observing Fields, exp " />
+                                    <TextBlock 
+                                    Text="{Binding RecomendedExposure}" />
+                                </StackPanel>
+                                
+                                <DataGrid 
                                 ItemsSource="{Binding NEOFields}" 
                                 AutoGenerateColumns="False" 
                                 IsReadOnly="True"
@@ -298,11 +308,20 @@
                                     <DataGridTextColumn Header=" Center Dec " Binding="{Binding Center.DecString}" />
 
                                 </DataGrid.Columns>
-                            </DataGrid>
+                                </DataGrid>
+                            </StackPanel>
+                            <Button
+                                Grid.Row="3"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                VerticalContentAlignment="Top"
+                                Content=" Create NEO Fields "
+                                Command="{Binding CreateNEOFieldsCommand}"
+                                />
                             <alt:AltitudeChart
                                     Grid.Row="0"
                                     Grid.Column="1"
-                                    Grid.RowSpan="5"
+                                    Grid.RowSpan="3"
                                     MinWidth="400"
                                     Margin="10,0,0,0"
                                     HorizontalAlignment="Stretch"
