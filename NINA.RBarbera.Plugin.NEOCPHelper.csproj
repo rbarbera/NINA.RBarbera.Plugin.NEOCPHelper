@@ -271,6 +271,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\NEOCPDeepSkyObject.cs" />
+    <Compile Include="Models\NEOCPEphemeride.cs" />
+    <Compile Include="Models\NEOCPObject.cs" />
+    <Compile Include="Models\NEOCPScanner.cs" />
     <Compile Include="Models\NEOCPTarget.cs" />
     <Compile Include="Models\NEOCPInputTarget.cs" />
     <Compile Include="NeocpHelper.cs" />

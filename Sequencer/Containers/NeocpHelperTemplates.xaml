@@ -272,17 +272,11 @@
                                 MaxHeight="180">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header=" Designation " Binding="{Binding Designation}" />
-                                    <DataGridTextColumn Header=" Score " Binding="{Binding Score}" />
-                                    <DataGridTextColumn Header=" Discovery " Binding="{Binding Discovery}" />
                                     <DataGridTextColumn Header=" RA " Binding="{Binding RA}" />
                                     <DataGridTextColumn Header=" Dec " Binding="{Binding Dec}" />
-                                    <DataGridTextColumn Header=" V " Binding="{Binding V}" />
-                                    <DataGridTextColumn Header=" Note " Binding="{Binding Note}" />
-                                    <DataGridTextColumn Header=" NObs " Binding="{Binding NObs}" />
-                                    <DataGridTextColumn Header=" Arc " Binding="{Binding Arc}" />
-                                    <DataGridTextColumn Header=" H " Binding="{Binding H}" />
-                                    <DataGridTextColumn Header=" Not seen in/days " Binding="{Binding NotSeenIn}" />
-
+                                    <DataGridTextColumn Header=" V " Binding="{Binding V, StringFormat=\{0:f1\}}" />
+                                    <DataGridTextColumn Header=" RA arcsec/min " Binding="{Binding speedRA, StringFormat=\{0\,4:f3\}}" />
+                                    <DataGridTextColumn Header=" Dec arcsec/min " Binding="{Binding speedDec, StringFormat=\{0\,4:f3\}}" />
                                 </DataGrid.Columns>
                             </DataGrid>
                             <alt:AltitudeChart
