@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
     internal class NEOCPField {
-        public NEOCPField(DateTime startTime, DateTime endTime) {
+        public NEOCPField(DateTime startTime, DateTime endTime, Coordinates coordinates) {
             StartTime = startTime;
             EndTime = endTime;
-            Center = null;
+            Center = coordinates;
         }
 
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public Coordinates Center { get; set; }
 
-        public TimeSpan Duration {
-            get => EndTime - StartTime;
+        public double Duration {
+            get => (EndTime - StartTime).TotalMinutes;
         }
+
     }
 }

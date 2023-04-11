@@ -45,14 +45,28 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
             System.Diagnostics.Debug.WriteLine("{0}", span);
 
             var initialTime = startTime;
+            var eph = Ephemerides.First();
+            var startRA = eph.RA;
+            var startDec = eph.Dec;
+
+
             var fields = new List<NEOCPField>();
             do {
                 var computedEnd = initialTime.AddMinutes(span);
                 var finalTime = new DateTime(Math.Min(endTime.Ticks, computedEnd.Ticks));
-                var newField = new NEOCPField(initialTime, finalTime);
+                var realSpan = finalTime - initialTime;
+                var endRA = startRA + (realSpan.TotalMinutes * speedRA)/3600.0;
+                var endDec = startDec + (realSpan.TotalMinutes * speedDec)/3600.0;
+
+                var midRA = (endRA + startRA) / 2.0;
+                var midDec = (endDec + startDec) / 2.0;
+                var newField = new NEOCPField(initialTime, finalTime, new Coordinates(midRA, midDec, Epoch.J2000, Astrometry.Coordinates.RAType.Degrees));
+
                 fields.Add(newField);
                 if (finalTime.Ticks >= endTime.Ticks)
                     break;
+                startRA = endRA;
+                startDec = endDec;
                 initialTime = finalTime;
             } while (true);
 
@@ -61,5 +75,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
         public Coordinates Coordinates() {
             return new Coordinates(Angle.ByDegree(AstroUtil.HMSToDegrees(RA)), Angle.ByDegree(AstroUtil.DMSToDegrees(Dec)), Epoch.J2000);
         }
+
     }
 }

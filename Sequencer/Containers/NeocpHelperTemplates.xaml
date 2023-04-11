@@ -293,8 +293,10 @@
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header=" Start " Binding="{Binding StartTime, StringFormat=\{0:HH:mm:ss\} }" />
                                     <DataGridTextColumn Header=" End " Binding="{Binding EndTime, StringFormat=\{0:HH:mm:ss\}}" />
-                                    <DataGridTextColumn Header=" Duration " Binding="{Binding Duration}" />
-                                    <DataGridTextColumn Header=" Center " Binding="{Binding Center}" />
+                                    <DataGridTextColumn Header=" Duration (min) " Binding="{Binding Duration, StringFormat=\{0:F1\}}" />
+                                    <DataGridTextColumn Header=" Center RA " Binding="{Binding Center.RAString}" />
+                                    <DataGridTextColumn Header=" Center Dec " Binding="{Binding Center.DecString}" />
+
                                 </DataGrid.Columns>
                             </DataGrid>
                             <alt:AltitudeChart
