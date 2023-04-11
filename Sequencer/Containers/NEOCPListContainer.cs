@@ -188,7 +188,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                 var xArcsec = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(xAng));
                 var yArcsec = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(yAng));
 
-                NEOFields = new AsyncObservableCollection<NEOCPField>(SelectedNEO.ComputeFields(DateTime.Now, DateTime.Now.AddHours(12), xArcsec, yArcsec));
+                var rise = NighttimeData.TwilightRiseAndSet.Rise ?? DateTime.Now;
+                var set = NighttimeData.TwilightRiseAndSet.Set ?? DateTime.Now;
+
+                NEOFields = new AsyncObservableCollection<NEOCPField>(SelectedNEO.ComputeFields(set, rise, xArcsec, yArcsec));
 
                 Target.TargetName = SelectedNEO.Designation;
                 Target.InputCoordinates.Coordinates = SelectedNEO.Coordinates();

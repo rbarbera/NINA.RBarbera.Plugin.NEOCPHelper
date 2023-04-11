@@ -23,8 +23,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
                 _ephemerides = value;
                 if (_ephemerides.Count > 0 ) {
                     var first = _ephemerides.First();
-                    this.RA = first.RA;
-                    this.Dec = first.Dec;
+                    this.RA = AstroUtil.DegreesToHMS(first.RA);
+                    this.Dec = AstroUtil.DegreesToDMS(first.Dec);
                     this.V = first.V;
                     this.speedRA = first.speedRA;
                     this.speedDec = first.speedDec;
