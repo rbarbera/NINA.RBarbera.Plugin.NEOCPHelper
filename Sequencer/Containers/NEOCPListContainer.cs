@@ -54,6 +54,7 @@ using NINA.Profile;
 using NINA.WPF.Base.Mediator;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
 using System.Diagnostics;
+using NINA.Equipment.Interfaces.Mediator;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
     [ExportMetadata("Name", "NEOCP object list container")]
@@ -69,6 +70,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
         private readonly IFramingAssistantVM framingAssistantVM;
         private readonly IPlanetariumFactory planetariumFactory;
         private readonly IApplicationMediator applicationMediator;
+        private readonly ICameraMediator cameraMediator;
         private INighttimeCalculator nighttimeCalculator;
 
         [ImportingConstructor]
@@ -77,12 +79,15 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                 INighttimeCalculator nighttimeCalculator,
                 IFramingAssistantVM framingAssistantVM,
                 IApplicationMediator applicationMediator,
+                ICameraMediator cameraMediator,
                 IPlanetariumFactory planetariumFactory) : base(new SequentialStrategy()) {
             this.profileService = profileService;
             this.nighttimeCalculator = nighttimeCalculator;
             this.applicationMediator = applicationMediator;
             this.framingAssistantVM = framingAssistantVM;
             this.planetariumFactory = planetariumFactory;
+            this.cameraMediator = cameraMediator;
+
 
             Task.Run(() => NighttimeData = nighttimeCalculator.Calculate(DateTime.Now.AddHours(4)));
 
@@ -139,8 +144,22 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
             set {
                 _SelectedNEO = value;
+                
                 LoadSingleTarget();
                 RaisePropertyChanged();
+            }
+        }
+
+        private AsyncObservableCollection<NEOCPField> _NEOFields;
+
+        [JsonProperty]
+        public AsyncObservableCollection<NEOCPField> NEOFields {
+            get {
+                return _NEOFields;
+            }
+            set {
+                _NEOFields = value;
+                RaiseAllPropertiesChanged();
             }
         }
 
@@ -159,6 +178,18 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
         private void LoadSingleTarget() {
             if (SelectedNEO != null && SelectedNEO?.Designation != null) {
+                var fl = profileService.ActiveProfile.TelescopeSettings.FocalLength;
+                var cameraInfo = cameraMediator.GetInfo();
+                var xSize = cameraInfo.XSize * cameraInfo.PixelSize / 1000.0;
+                var ySize = cameraInfo.YSize * cameraInfo.PixelSize / 1000.0;
+
+                var xAng = 2 * Math.Atan2(xSize / 2, fl);
+                var yAng = 2 * Math.Atan2(ySize / 2, fl);
+                var xArcsec = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(xAng));
+                var yArcsec = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(yAng));
+
+                NEOFields = new AsyncObservableCollection<NEOCPField>(SelectedNEO.ComputeFields(DateTime.Now, DateTime.Now.AddHours(12), xArcsec, yArcsec));
+
                 Target.TargetName = SelectedNEO.Designation;
                 Target.InputCoordinates.Coordinates = SelectedNEO.Coordinates();
                 Target.DeepSkyObject.Coordinates = SelectedNEO.Coordinates();
@@ -170,7 +201,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
         }
 
         public override object Clone() {
-            var clone = new NEOCPListContainer(profileService, nighttimeCalculator, framingAssistantVM, applicationMediator, planetariumFactory) {
+            var clone = new NEOCPListContainer(profileService, nighttimeCalculator, framingAssistantVM, applicationMediator, cameraMediator, planetariumFactory) {
                 Icon = Icon,
                 Name = Name,
                 Category = Category,

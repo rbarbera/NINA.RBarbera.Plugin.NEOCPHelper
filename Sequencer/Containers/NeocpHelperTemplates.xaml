@@ -220,6 +220,7 @@
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <StackPanel
@@ -279,9 +280,22 @@
                                     <DataGridTextColumn Header=" Dec arcsec/min " Binding="{Binding speedDec, StringFormat=\{0\,4:f3\}}" />
                                 </DataGrid.Columns>
                             </DataGrid>
+                            <DataGrid 
+                                Grid.Row="2" 
+                                ItemsSource="{Binding NEOFields}" 
+                                AutoGenerateColumns="False" 
+                                IsReadOnly="True"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow"
+                                MaxHeight="180">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header=" Start " Binding="{Binding StartTime }" />
+                                    <DataGridTextColumn Header=" End " Binding="{Binding EndTime}" />
+                                    <DataGridTextColumn Header=" Center " Binding="{Binding Center}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
                             <alt:AltitudeChart
                                     Grid.Row="0"
-                                    Grid.RowSpan="5"
                                     Grid.Column="1"
                                     MinWidth="400"
                                     Margin="10,0,0,0"
