@@ -210,7 +210,14 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                 var rise = NighttimeData.TwilightRiseAndSet.Rise ?? DateTime.Now;
                 var set = NighttimeData.TwilightRiseAndSet.Set ?? DateTime.Now;
 
-                NEOFields = new AsyncObservableCollection<NEOCPField>(SelectedNEO.ComputeFields(set, rise, xArcsec, yArcsec));
+                Core.Model.CustomHorizon horizon = profileService.ActiveProfile.AstrometrySettings.Horizon;
+
+                var starRise = GetNextRiseTime(horizon, SelectedNEO.Coordinates(), set.ToLocalTime());
+                starRise = new DateTime(Math.Min(starRise.Ticks, rise.Ticks));
+                var starSet = GetNextSetTime(horizon, SelectedNEO.Coordinates(), starRise.AddMinutes(10d));
+                starSet = new DateTime(Math.Min(starSet.Ticks, rise.Ticks));
+
+                NEOFields = new AsyncObservableCollection<NEOCPField>(SelectedNEO.ComputeFields(starRise, starSet , xArcsec, yArcsec));
 
                 Target.TargetName = SelectedNEO.Designation;
                 Target.InputCoordinates.Coordinates = SelectedNEO.Coordinates();
@@ -276,6 +283,49 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             });           
         }
 
+        private DateTime GetNextSetTime(CustomHorizon horizon, Coordinates coords, DateTime startTime) {
+            var start = startTime;
+            var siderealTime = AstroUtil.GetLocalSiderealTime(start, profileService.ActiveProfile.AstrometrySettings.Longitude);
+            var hourAngle = AstroUtil.GetHourAngle(siderealTime, coords.RA);
+
+            for (double angle = hourAngle; angle < hourAngle + 24; angle += 0.1) {
+                var degAngle = AstroUtil.HoursToDegrees(angle);
+                var altitude = AstroUtil.GetAltitude(degAngle, profileService.ActiveProfile.AstrometrySettings.Latitude, coords.Dec);
+                var azimuth = AstroUtil.GetAzimuth(degAngle, altitude, profileService.ActiveProfile.AstrometrySettings.Latitude, coords.Dec);
+
+                if ((horizon != null) && altitude < horizon.GetAltitude(azimuth)) {
+                    break;
+                } else if (altitude < 0) {
+                    break;
+                }
+
+
+                start = start.AddHours(0.1);
+            }
+            return start;
+        }
+
+        private DateTime GetNextRiseTime(CustomHorizon horizon, Coordinates coords, DateTime startTime) {
+            var start = startTime;
+            var siderealTime = AstroUtil.GetLocalSiderealTime(start, profileService.ActiveProfile.AstrometrySettings.Longitude);
+            var hourAngle = AstroUtil.GetHourAngle(siderealTime, coords.RA);
+
+            for (double angle = hourAngle; angle < hourAngle + 24; angle += 0.1) {
+                var degAngle = AstroUtil.HoursToDegrees(angle);
+                var altitude = AstroUtil.GetAltitude(degAngle, profileService.ActiveProfile.AstrometrySettings.Latitude, coords.Dec);
+                var azimuth = AstroUtil.GetAzimuth(degAngle, altitude, profileService.ActiveProfile.AstrometrySettings.Latitude, coords.Dec);
+
+                if ((horizon != null) && altitude > horizon.GetAltitude(azimuth)) {
+                    break;
+                } else if (altitude > 0) {
+                    break;
+                }
+
+
+                start = start.AddHours(0.1);
+            }
+            return start;
+        }
         public override object Clone() {
             var clone = new NEOCPListContainer(profileService, sequenceMediator, nighttimeCalculator, framingAssistantVM, applicationMediator, cameraMediator, planetariumFactory) {
                 Icon = Icon,

@@ -219,10 +219,10 @@
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="35" />
+                                <RowDefinition Height="120" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="40" />
                             </Grid.RowDefinitions>
                             <StackPanel
                                     Grid.Row="0"
@@ -232,7 +232,7 @@
                                     Orientation="Horizontal">
                                 <TextBlock
                                         VerticalAlignment="Center"
-                                        Text="Refresh NEOCP" />
+                                        Text="Get NEOCP" />
                                 <Button
                                         Width="25"
                                         Height="25"
@@ -271,24 +271,26 @@
                                 SelectionMode="Single"
                                 SelectionUnit="FullRow"
                                 SelectedValue="{Binding SelectedNEO}"
-                                MaxHeight="180">
+                                Height="120">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header=" Designation " Binding="{Binding Designation}" />
                                     <DataGridTextColumn Header=" RA " Binding="{Binding RA}" />
                                     <DataGridTextColumn Header=" Dec " Binding="{Binding Dec}" />
                                     <DataGridTextColumn Header=" V " Binding="{Binding V, StringFormat=\{0:f1\}}" />
-                                    <DataGridTextColumn Header=" RA arcsec/min " Binding="{Binding speedRA, StringFormat=\{0\,4:f3\}}" />
-                                    <DataGridTextColumn Header=" Dec arcsec/min " Binding="{Binding speedDec, StringFormat=\{0\,4:f3\}}" />
+                                    <DataGridTextColumn Header=" RA &quot;/min " Binding="{Binding speedRA, StringFormat=\{0\,4:f3\}}" />
+                                    <DataGridTextColumn Header=" Dec &quot;/min " Binding="{Binding speedDec, StringFormat=\{0\,4:f3\}}" />
                                 </DataGrid.Columns>
                             </DataGrid>
                             <StackPanel
                                 Orientation="Vertical"
                                 Grid.Row="2">
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Height="40">
                                     <TextBlock 
-                                    Text="Observing Fields, exp " />
+                                        VerticalAlignment="Bottom"
+                                        Text="Observing Fields, exp " />
                                     <TextBlock 
-                                    Text="{Binding RecomendedExposure}" />
+                                        VerticalAlignment="Bottom"
+                                        Text="{Binding RecomendedExposure}" />
                                 </StackPanel>
                                 
                                 <DataGrid 
@@ -301,12 +303,11 @@
                                 VerticalContentAlignment="Top"
                                 MaxHeight="180">
                                 <DataGrid.Columns>
+                                    <DataGridTextColumn Header=" RA " Binding="{Binding Center.RAString}" />
+                                    <DataGridTextColumn Header=" Dec " Binding="{Binding Center.DecString}" />
                                     <DataGridTextColumn Header=" Start " Binding="{Binding StartTime, StringFormat=\{0:HH:mm:ss\} }" />
                                     <DataGridTextColumn Header=" End " Binding="{Binding EndTime, StringFormat=\{0:HH:mm:ss\}}" />
-                                    <DataGridTextColumn Header=" Duration (min) " Binding="{Binding Duration, StringFormat=\{0:F1\}}" />
-                                    <DataGridTextColumn Header=" Center RA " Binding="{Binding Center.RAString}" />
-                                    <DataGridTextColumn Header=" Center Dec " Binding="{Binding Center.DecString}" />
-
+                                    <DataGridTextColumn Header=" Duration (min) " Binding="{Binding Duration, StringFormat=\{0:F0\}}" />
                                 </DataGrid.Columns>
                                 </DataGrid>
                             </StackPanel>
@@ -321,7 +322,7 @@
                             <alt:AltitudeChart
                                     Grid.Row="0"
                                     Grid.Column="1"
-                                    Grid.RowSpan="3"
+                                    Grid.RowSpan="2"
                                     MinWidth="400"
                                     Margin="10,0,0,0"
                                     HorizontalAlignment="Stretch"
