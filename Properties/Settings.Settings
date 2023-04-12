@@ -11,5 +11,8 @@
     <Setting Name="UsedField" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">41</Value>
     </Setting>
+    <Setting Name="SelectedTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

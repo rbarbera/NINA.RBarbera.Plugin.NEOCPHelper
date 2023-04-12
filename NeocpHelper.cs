@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Settings = NINA.RBarbera.Plugin.NeocpHelper.Properties.Settings;
 using System.Threading;
+using NINA.Sequencer.Interfaces.Mediator;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper {
     /// <summary>
@@ -29,9 +30,11 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
     /// </summary>
     [Export(typeof(IPluginManifest))]
     public class NeocpHelper : PluginBase, INotifyPropertyChanged {
- 
+        private readonly ISequenceMediator sequenceMediator;
+
         [ImportingConstructor]
-        public NeocpHelper() {
+        public NeocpHelper(ISequenceMediator sequenceMediator) {
+            this.sequenceMediator = sequenceMediator;
 
             if (Properties.Settings.Default.UpgradeSettings) {
                 Properties.Settings.Default.Upgrade();
@@ -59,6 +62,24 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
                 Settings.Default.UsedField = value;
                 CoreUtil.SaveSettings(Settings.Default);
                 RaisePropertyChanged();
+            }
+        }
+
+        public string SelectedTemplate {
+            get {
+                return Settings.Default.SelectedTemplate;
+            }
+            set {
+                Settings.Default.SelectedTemplate = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
+        public List<String> AvailableTemplates {
+            get {
+                var templates = sequenceMediator.GetDeepSkyObjectContainerTemplates();
+                return templates.Select(x => x.Name).ToList();
             }
         }
 

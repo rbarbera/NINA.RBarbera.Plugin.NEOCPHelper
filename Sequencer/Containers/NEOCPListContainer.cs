@@ -66,7 +66,7 @@ using NINA.Sequencer.SequenceItem.Imaging;
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
     [ExportMetadata("Name", "NEOCP object list container")]
     [ExportMetadata("Description", "A container to choose a NEOCP target.")]
-    [ExportMetadata("Icon", "Plugin_Test_SVG")]
+    [ExportMetadata("Icon", "ImpactorSVG")]
     [ExportMetadata("Category", "Lbl_SequenceCategory_Container")]
     [Export(typeof(ISequenceItem))]
     [Export(typeof(ISequenceContainer))]
@@ -98,7 +98,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             this.framingAssistantVM = framingAssistantVM;
             this.planetariumFactory = planetariumFactory;
             this.cameraMediator = cameraMediator;
-            this.neocpHelper = new NeocpHelper();
+            this.neocpHelper = new NeocpHelper(sequenceMediator);
 
 
             Task.Run(() => NighttimeData = nighttimeCalculator.Calculate(DateTime.Now.AddHours(4)));
@@ -229,7 +229,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                     return false;
                 IDeepSkyObjectContainer myTemplate = null;
                 var templates = sequenceMediator.GetDeepSkyObjectContainerTemplates();
-                myTemplate = templates.Where(tp => tp.Name == "NEOCP_FIELD_TEMPLATE").First();
+                myTemplate = templates.Where(tp => tp.Name == neocpHelper.SelectedTemplate).First();
 
                 DeepSkyObjectContainer fieldContainer = (DeepSkyObjectContainer)myTemplate.Clone();
                 fieldContainer.Target = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon) 

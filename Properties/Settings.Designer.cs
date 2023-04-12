@@ -58,5 +58,17 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
                 this["UsedField"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SelectedTemplate {
+            get {
+                return ((string)(this["SelectedTemplate"]));
+            }
+            set {
+                this["SelectedTemplate"] = value;
+            }
+        }
     }
 }

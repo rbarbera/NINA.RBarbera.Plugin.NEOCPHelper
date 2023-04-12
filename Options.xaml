@@ -6,15 +6,51 @@
     <!--  In order for this datatemplate to be picked correctly, the key has to follow the naming convention of <IPlugin.Name>_Options -->
     <!--  Furthermore the Resource Dictionary has to be exported via code behind export attributes  -->
     <DataTemplate x:Key="NEOCP Helper_Options">
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Max Length (px): " />
-                <TextBox MinWidth="50" Text="{Binding MaxLength}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Used field (arcmin): " />
-                <TextBox MinWidth="50" Text="{Binding UsedField}" />
-            </StackPanel>
-        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock 
+                Grid.Column="0"
+                Grid.Row="0"
+                Text="Max Length (px)" />
+            <TextBox 
+                Grid.Column="1"
+                Grid.Row="0"
+                Margin="10,0,2,0"
+                MinWidth="50" Text="{Binding MaxLength}" />
+            <TextBlock 
+                Grid.Column="0"
+                Grid.Row="1"
+                Text="Used field (arcmin):" />
+            <TextBox 
+                Grid.Column="1"
+                Grid.Row="1"
+                Margin="10,0,2,0"
+                MinWidth="50" Text="{Binding UsedField}" />
+            <TextBlock 
+                Grid.Column="0"
+                Grid.Row="2"
+                Text="NEO Container template:" />
+            <ComboBox
+                Grid.Column="1"
+                Grid.Row="2"
+                Height="25"
+                MinWidth="70"
+                Margin="10,0,2,0"
+                IsEditable="False"
+                IsTextSearchEnabled="False"
+                ItemsSource="{Binding AvailableTemplates}"
+                SelectedValue="{Binding SelectedTemplate}">
+            </ComboBox>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>
