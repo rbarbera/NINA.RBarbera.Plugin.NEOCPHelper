@@ -12,7 +12,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.2.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -26,24 +26,36 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UpdateSettings {
+        public bool UpgradeSettings {
             get {
-                return ((bool)(this["UpdateSettings"]));
+                return ((bool)(this["UpgradeSettings"]));
             }
             set {
-                this["UpdateSettings"] = value;
+                this["UpgradeSettings"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("This is a notification")]
-        public string DefaultNotificationMessage {
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int MaxLength {
             get {
-                return ((string)(this["DefaultNotificationMessage"]));
+                return ((int)(this["MaxLength"]));
             }
             set {
-                this["DefaultNotificationMessage"] = value;
+                this["MaxLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("41")]
+        public int UsedField {
+            get {
+                return ((int)(this["UsedField"]));
+            }
+            set {
+                this["UsedField"] = value;
             }
         }
     }

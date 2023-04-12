@@ -284,6 +284,9 @@
                                     <DataGridTextColumn Header=" V " Binding="{Binding V, StringFormat=\{0:f1\}}" />
                                     <DataGridTextColumn Header=" H " Binding="{Binding H, StringFormat=\{0:f1\}}" />
                                     <DataGridTextColumn Header=" &quot;/min " Binding="{Binding totalSpeed, StringFormat=\{0\,4:f3\}}" />
+                                    <DataGridTextColumn Header=" px/min " Binding="{Binding PPMin, StringFormat=\{0\,4:f3\}}" />
+                                    <DataGridTextColumn Header=" Exp. Max (s) " Binding="{Binding ExpMax}" />
+                                    <DataGridTextColumn Header=" T. Max (min) " Binding="{Binding TMax}" />
                                     <DataGridTextColumn Header=" NObs " Binding="{Binding NObs}" />
                                     <DataGridTextColumn Header=" Arc " Binding="{Binding Arc}" />
                                     <DataGridTextColumn Header=" Not Seen In " Binding="{Binding NotSeenIn}" />

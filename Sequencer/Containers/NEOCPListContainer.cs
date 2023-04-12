@@ -54,6 +54,7 @@ using NINA.Profile;
 using NINA.WPF.Base.Mediator;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
 using NINA.RBarbera.Plugin.NeocpHelper.Utility;
+using NINA.RBarbera.Plugin.NeocpHelper;
 
 using System.Diagnostics;
 using NINA.Equipment.Interfaces.Mediator;
@@ -79,6 +80,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
         private readonly IApplicationMediator applicationMediator;
         private readonly ICameraMediator cameraMediator;
         private INighttimeCalculator nighttimeCalculator;
+        private NeocpHelper neocpHelper;
 
         [ImportingConstructor]
         public NEOCPListContainer(
@@ -96,6 +98,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             this.framingAssistantVM = framingAssistantVM;
             this.planetariumFactory = planetariumFactory;
             this.cameraMediator = cameraMediator;
+            this.neocpHelper = new NeocpHelper();
 
 
             Task.Run(() => NighttimeData = nighttimeCalculator.Calculate(DateTime.Now.AddHours(4)));
@@ -382,8 +385,15 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             });
         }
 
-        private AsyncObservableCollection<NEOCPTarget> getNEOCPList() {    
-            return new AsyncObservableCollection<NEOCPTarget>(NEOCPDownloader.Get());
+        private AsyncObservableCollection<NEOCPTarget> getNEOCPList() {
+            var pixelSize = profileService.ActiveProfile.CameraSettings.PixelSize;
+            var focalLength = profileService.ActiveProfile.TelescopeSettings.FocalLength;
+            var scale = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(2 * Math.Atan2(pixelSize / 2000, focalLength)));
+
+            var list = NEOCPDownloader.Get(profileService.ActiveProfile.AstrometrySettings);
+            list.ForEach(e => e.SetScales(scale, neocpHelper.MaxLength, neocpHelper.UsedField)) ;
+
+            return new AsyncObservableCollection<NEOCPTarget>(list);
         }
     }
 }

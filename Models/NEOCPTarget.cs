@@ -60,6 +60,17 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
             }
         }
 
+        public double PPMin { get; internal set; }
+        public int ExpMax { get; internal set; }
+        public int TMax { get; internal set; }
+
+
+        public void SetScales(double pixelScale, int spotSize, int usedFieldArcmin) {
+            this.PPMin = this.totalSpeed/ pixelScale;
+            this.ExpMax = (int)Math.Ceiling(60.0 * spotSize / this.PPMin);
+            this.TMax = (int)Math.Ceiling(usedFieldArcmin * 60 / totalSpeed);
+        }
+
         public double MaxExposure(double pixelScale, int spotSize) {
             var speed = Math.Max(Math.Abs(speedRA), Math.Abs(speedDec));
             return (pixelScale * spotSize) / speed * 60.0;

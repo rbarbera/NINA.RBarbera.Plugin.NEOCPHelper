@@ -8,12 +8,12 @@
     <DataTemplate x:Key="NEOCP Helper_Options">
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Default Notification Message" />
-                <TextBox MinWidth="50" Text="{Binding DefaultNotificationMessage}" />
+                <TextBlock Text="Max Length (px): " />
+                <TextBox MinWidth="50" Text="{Binding MaxLength}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Profile Specific Notification Message" />
-                <TextBox MinWidth="50" Text="{Binding ProfileSpecificNotificationMessage}" />
+                <TextBlock Text="Used field (arcmin): " />
+                <TextBox MinWidth="50" Text="{Binding UsedField}" />
             </StackPanel>
         </StackPanel>
     </DataTemplate>
