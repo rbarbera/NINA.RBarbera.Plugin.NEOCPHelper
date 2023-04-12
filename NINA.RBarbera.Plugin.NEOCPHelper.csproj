@@ -273,9 +273,8 @@
     <Compile Include="Models\NEOCPDeepSkyObject.cs" />
     <Compile Include="Models\NEOCPEphemeride.cs" />
     <Compile Include="Models\NEOCPField.cs" />
-    <Compile Include="Models\NEOCPObject.cs" />
-    <Compile Include="Models\NEOCPScanner.cs" />
     <Compile Include="Models\NEOCPTarget.cs" />
+    <Compile Include="Utility\NEOCPScanner.cs" />
     <Compile Include="Models\NEOCPInputTarget.cs" />
     <Compile Include="NeocpHelper.cs" />
     <Compile Include="Sequencer\Containers\NEOCPListContainer.cs" />
@@ -291,6 +290,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utility\NEOCPDownloader.cs" />
     <Compile Include="View\AltitudeChart.xaml.cs" />
   </ItemGroup>
   <ItemGroup>

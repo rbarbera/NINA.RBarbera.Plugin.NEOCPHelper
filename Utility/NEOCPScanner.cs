@@ -5,17 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NINA.RBarbera.Plugin.NeocpHelper.Models;
 
-namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
+namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
     internal class NEOCPScanner: StringReader
     {
         public NEOCPScanner(string s): base(s)
         {
         }
 
-        public List<NEOCPObject> ReadNEOS()
+        public Dictionary<string, List<NEOCPEphemeride>> ReadEphemerides()
         {
-            var neos = new List<NEOCPObject>();
+            var ephemerides = new Dictionary<string, List<NEOCPEphemeride>>();
             do
             {
                 this.SkipTo("<b>");
@@ -24,24 +25,22 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
                     break;
                 this.SkipTo("<pre>");
                 var ep = this.GetUntil("</pre>");
-                var item = new NEOCPObject(des);
-                var epList = new List<NEOCPEphemeride>();
+                var list = new List<NEOCPEphemeride>();
                 foreach (string line in ep.Split("\r\n".ToCharArray()))
                 {
                     try
                     {
-                        epList.Add(new NEOCPEphemeride(line));
+                        list.Add(new NEOCPEphemeride(line));
                     } catch(Exception e)
                     {
                         Debug.WriteLine(e);
                     }
                 }
-                if (epList.Count > 0) {
-                    item.Ephemerides = epList;
-                    neos.Add(item);
+                if (list.Count > 0) {
+                    ephemerides.Add(des, list);
                 }
             } while (true);
-            return neos;
+            return ephemerides;
         }
 
         public void SkipTo(string label)

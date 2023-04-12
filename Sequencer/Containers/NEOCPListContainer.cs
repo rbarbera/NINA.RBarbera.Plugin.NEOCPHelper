@@ -53,6 +53,8 @@ using NINA.Equipment.Equipment.MyPlanetarium;
 using NINA.Profile;
 using NINA.WPF.Base.Mediator;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
+using NINA.RBarbera.Plugin.NeocpHelper.Utility;
+
 using System.Diagnostics;
 using NINA.Equipment.Interfaces.Mediator;
 using NINA.Sequencer.Interfaces.Mediator;
@@ -105,7 +107,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             NEOCPDSO = new NEOCPDeepSkyObject(string.Empty, new Coordinates(Angle.Zero, Angle.Zero, Epoch.J2000), string.Empty, profileService.ActiveProfile.AstrometrySettings.Horizon);
             NEOCPDSO.SetDateAndPosition(NighttimeCalculator.GetReferenceDate(DateTime.Now.AddHours(4)), profileService.ActiveProfile.AstrometrySettings.Latitude, profileService.ActiveProfile.AstrometrySettings.Longitude);
 
-            NEOCPTargets = new AsyncObservableCollection<NEOCPObject>();
+            NEOCPTargets = new AsyncObservableCollection<NEOCPTarget>();
 
         }
         private Dispatcher _dispatcher = System.Windows.Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
@@ -134,9 +136,9 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
         public NighttimeData NighttimeData { get; private set; }
 
-        private AsyncObservableCollection<NEOCPObject> _neocpTargets;
+        private AsyncObservableCollection<NEOCPTarget> _neocpTargets;
 
-        public AsyncObservableCollection<NEOCPObject> NEOCPTargets {
+        public AsyncObservableCollection<NEOCPTarget> NEOCPTargets {
             get {
                 return _neocpTargets;
             }
@@ -146,10 +148,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
         }
 
-        private NEOCPObject _SelectedNEO;
+        private NEOCPTarget _SelectedNEO;
 
         [JsonProperty]
-        public NEOCPObject SelectedNEO {
+        public NEOCPTarget SelectedNEO {
             get {
                 return _SelectedNEO;
             }
@@ -197,6 +199,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
         private void LoadSingleTarget() {
             if (SelectedNEO != null && SelectedNEO?.Designation != null) {
+                /*
                 var fl = profileService.ActiveProfile.TelescopeSettings.FocalLength;
                 var cameraInfo = cameraMediator.GetInfo();
                 var xSize = cameraInfo.XSize * cameraInfo.PixelSize / 1000.0;
@@ -218,6 +221,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                 starSet = new DateTime(Math.Min(starSet.Ticks, rise.Ticks));
 
                 NEOFields = new AsyncObservableCollection<NEOCPField>(SelectedNEO.ComputeFields(starRise, starSet , xArcsec, yArcsec));
+                */
 
                 Target.TargetName = SelectedNEO.Designation;
                 Target.InputCoordinates.Coordinates = SelectedNEO.Coordinates();
@@ -378,31 +382,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             });
         }
 
-        private AsyncObservableCollection<NEOCPObject> getNEOCPList() {
-
-            var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
-
-            var postData = "Parallax=0&long=1.1 W&lat=39.5d&alt=0&int=1&raty=h&mot=m&dmot=r&out=f&sun=a";
-            var data = Encoding.ASCII.GetBytes(postData);
-
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = data.Length;
-
-            using (var stream = request.GetRequestStream()) {
-                stream.Write(data, 0, data.Length);
-            }
-
-            var response = (HttpWebResponse)request.GetResponse();
-
-            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-
-
-            var scanner = new NEOCPScanner(responseString);
-           
-            var list = new AsyncObservableCollection<NEOCPObject>(scanner.ReadNEOS());
-        
-            return list;
+        private AsyncObservableCollection<NEOCPTarget> getNEOCPList() {    
+            return new AsyncObservableCollection<NEOCPTarget>(NEOCPDownloader.Get());
         }
     }
 }

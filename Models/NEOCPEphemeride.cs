@@ -5,8 +5,41 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
+
+    public class RAConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+            double input = (double)value;
+            return AstroUtil.DegreesToHMS(input);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class DecConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+            double input = (double)value;
+            return AstroUtil.DegreesToDMS(input);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+            throw new NotSupportedException();
+        }
+    }
+
+    internal class NEOCPEphemerides {
+
+        public NEOCPEphemerides(string des) {
+            this.Designation = des;
+        }
+
+        public string Designation { get; set; }
+        public List<NEOCPEphemeride> Ephemerides { get; set; }
+    }
     internal class NEOCPEphemeride
     {
         public NEOCPEphemeride(string s) 
