@@ -104,7 +104,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             Task.Run(() => NighttimeData = nighttimeCalculator.Calculate(DateTime.Now.AddHours(4)));
 
             LoadTargetsCommand = new AsyncCommand<bool>(LoadTargets);
-            CreateNEOFieldsCommand = new AsyncCommand<bool>(CreateDSOContainers);
+            CreateNEOFieldCommand = new AsyncCommand<bool>(CreateDSOContainer);
 
             NEOCPInputTarget = new NEOCPInputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon);
             NEOCPDSO = new NEOCPDeepSkyObject(string.Empty, new Coordinates(Angle.Zero, Angle.Zero, Epoch.J2000), string.Empty, profileService.ActiveProfile.AstrometrySettings.Horizon);
@@ -116,7 +116,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
         private Dispatcher _dispatcher = System.Windows.Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
 
         public ICommand LoadTargetsCommand { get; set; }
-        public ICommand CreateNEOFieldsCommand { get; set; }
+        public ICommand CreateNEOFieldCommand { get; set; }
 
 
         private NEOCPInputTarget _target;
@@ -163,19 +163,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                 
                 LoadSingleTarget();
                 RaisePropertyChanged();
-            }
-        }
-
-        private AsyncObservableCollection<NEOCPField> _NEOFields;
-
-        [JsonProperty]
-        public AsyncObservableCollection<NEOCPField> NEOFields {
-            get {
-                return _NEOFields;
-            }
-            set {
-                _NEOFields = value;
-                RaiseAllPropertiesChanged();
             }
         }
 
@@ -236,56 +223,29 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
         }
 
-        public Task<bool> CreateDSOContainers() {
+        public Task<bool> CreateDSOContainer() {
             return Task<bool>.Run(() => {
-                if (SelectedNEO == null || NEOFields.Count == 0)
+                if (SelectedNEO == null)
                     return false;
                 IDeepSkyObjectContainer myTemplate = null;
                 var templates = sequenceMediator.GetDeepSkyObjectContainerTemplates();
-                myTemplate = templates.Where(tp => tp.Name == "NEOCP_FIELD_TEMPLATE_ADV").First();
-                var index = 1;
-                var exposureTime = Math.Floor(SelectedNEO.MaxExposure(0.66, 4));
+                myTemplate = templates.Where(tp => tp.Name == "NEOCP_FIELD_TEMPLATE").First();
 
-                foreach (NEOCPField field in NEOFields) {
-                    DeepSkyObjectContainer fieldContainer = (DeepSkyObjectContainer)myTemplate.Clone();
-                    fieldContainer.Target = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon) {
-                        TargetName = SelectedNEO.Designation + "_field_" + index,
-                        InputCoordinates = new InputCoordinates() {
-                            Coordinates = field.Center
-                        },
-                        Rotation = 0
-                    };
-                    fieldContainer.Name = SelectedNEO.Designation + "_field_" + index;
-                    fieldContainer.Items.ToList().ForEach(x => {
-                        if (x is WaitForTime waitForTime) {
-                            waitForTime.Hours = field.StartTime.Hour;
-                            waitForTime.Minutes = field.StartTime.Minute;
-                            waitForTime.Seconds = field.StartTime.Second;
-                        }
-                        if (x is NINA.Sequencer.Container.SequentialContainer sequencialContainer) {
-                            sequencialContainer.Conditions.ToList().ForEach(y => {
-                                if (y is TimeCondition timeCondition) {
-                                    timeCondition.Hours = field.EndTime.Hour;
-                                    timeCondition.Minutes = field.EndTime.Minute;
-                                    timeCondition.Seconds = field.EndTime.Second;
-                                }
-                            });
-                            sequencialContainer.Items.ToList().ForEach(y => {
-                                if (y is TakeExposure takeExposure) {
-                                    takeExposure.ExposureTime = exposureTime;
-                                }
-                            });
-                        };
-                    });
+                DeepSkyObjectContainer fieldContainer = (DeepSkyObjectContainer)myTemplate.Clone();
+                fieldContainer.Target = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon) 
+                {
+                    TargetName = SelectedNEO.Designation,
+                    InputCoordinates = new InputCoordinates() { Coordinates = SelectedNEO.Coordinates() },
+                    Rotation = 0
+                };
+                fieldContainer.Name = SelectedNEO.Designation;
                     
-                    index += 1;
-                    _ = _dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-                        lock (Items) {
-                            this.InsertIntoSequenceBlocks(100, fieldContainer);
-                            Logger.Debug("Adding target container: " + fieldContainer);
-                        }
-                    }));
-                }
+                _ = _dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                    lock (Items) {
+                        this.InsertIntoSequenceBlocks(100, fieldContainer);
+                        Logger.Debug("Adding target container: " + fieldContainer);
+                    }
+                }));
                 return true;
             });           
         }

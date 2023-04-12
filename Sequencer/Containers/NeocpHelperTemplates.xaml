@@ -221,13 +221,13 @@
                             </Grid.Resources>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="Auto" />
+
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="35" />
-                                <RowDefinition Height="120" />
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="40" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <StackPanel
                                     Grid.Row="0"
@@ -268,35 +268,49 @@
                                             LoadingImageBrush="{StaticResource ButtonForegroundBrush}" />
                                 </StackPanel>
                             </StackPanel>
-                            <DataGrid 
-                                Grid.Row="1" 
+                            <StackPanel
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Orientation="Vertical">
+                                <DataGrid 
                                 ItemsSource="{Binding NEOCPTargets}" 
                                 AutoGenerateColumns="False" 
                                 IsReadOnly="True"
                                 SelectionMode="Single"
                                 SelectionUnit="FullRow"
                                 SelectedValue="{Binding SelectedNEO}"
-                                Height="120">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header=" Designation " Binding="{Binding Designation}" />
-                                    <DataGridTextColumn Header=" RA " Binding="{Binding RA, Converter={StaticResource RAConverter}}" />
-                                    <DataGridTextColumn Header=" Dec " Binding="{Binding Dec, Converter={StaticResource DecConverter}}" />
-                                    <DataGridTextColumn Header=" V " Binding="{Binding V, StringFormat=\{0:f1\}}" />
-                                    <DataGridTextColumn Header=" H " Binding="{Binding H, StringFormat=\{0:f1\}}" />
-                                    <DataGridTextColumn Header=" &quot;/min " Binding="{Binding totalSpeed, StringFormat=\{0\,4:f3\}}" />
-                                    <DataGridTextColumn Header=" px/min " Binding="{Binding PPMin, StringFormat=\{0\,4:f3\}}" />
-                                    <DataGridTextColumn Header=" Exp. Max (s) " Binding="{Binding ExpMax}" />
-                                    <DataGridTextColumn Header=" T. Max (min) " Binding="{Binding TMax}" />
-                                    <DataGridTextColumn Header=" NObs " Binding="{Binding NObs}" />
-                                    <DataGridTextColumn Header=" Arc " Binding="{Binding Arc}" />
-                                    <DataGridTextColumn Header=" Not Seen In " Binding="{Binding NotSeenIn}" />
-                                </DataGrid.Columns>
-                            </DataGrid>
+                                MaxHeight="220">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header=" Designation " Binding="{Binding Designation}" />
+                                        <DataGridTextColumn Header=" RA " Binding="{Binding RA, Converter={StaticResource RAConverter}}" />
+                                        <DataGridTextColumn Header=" Dec " Binding="{Binding Dec, Converter={StaticResource DecConverter}}" />
+                                        <DataGridTextColumn Header=" V " Binding="{Binding V, StringFormat=\{0:f1\}}" />
+                                        <DataGridTextColumn Header=" &quot;/min " Binding="{Binding totalSpeed, StringFormat=\{0\,4:f3\}}" />
+                                        <DataGridTextColumn Header=" NObs " Binding="{Binding NObs}" />
+                                        <DataGridTextColumn Header=" Arc " Binding="{Binding Arc}" />
+                                        <DataGridTextColumn Header=" Days " Binding="{Binding NotSeenIn}" />
+                                        <DataGridTextColumn Header=" H " Binding="{Binding H, StringFormat=\{0:f1\}}" />
+                                        <DataGridTextColumn Header=" Exp. Max (s) " Binding="{Binding ExpMax}" />
+                                        <DataGridTextColumn Header=" T. Max (min) " Binding="{Binding TMax}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Grid
+                                    HorizontalAlignment = "Right">
+                                    <Button 
+                                        Content="Generate NEO container"
+                                        Padding="20,20"                                
+                                        IsEnabled="{Binding NEOCPTargets.Count}"
+                                        Command="{Binding CreateNEOFieldCommand}"
+                                    />
+                                </Grid>
+                                
+                            </StackPanel>
                             <alt:AltitudeChart
-                                    Grid.Row="0"
+                                    Grid.Row="1"
                                     Grid.Column="1"
                                     Grid.RowSpan="2"
                                     MinWidth="400"
+                                    VerticalAlignment="Top"
                                     Margin="10,0,0,0"
                                     HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Stretch"
