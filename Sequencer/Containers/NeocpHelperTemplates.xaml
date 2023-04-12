@@ -227,7 +227,6 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <StackPanel
                                     Grid.Row="0"
@@ -294,16 +293,18 @@
                                         <DataGridTextColumn Header=" T. Max (min) " Binding="{Binding TMax}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <Grid
-                                    HorizontalAlignment = "Right">
-                                    <Button 
+                                <Button 
                                         Content="Generate NEO container"
-                                        Padding="20,20"                                
+                                        Margin="0,10"
+                                        Height="30"
                                         IsEnabled="{Binding NEOCPTargets.Count}"
-                                        Command="{Binding CreateNEOFieldCommand}"
-                                    />
-                                </Grid>
-                                
+                                        Command="{Binding CreateNEOFieldCommand}">
+                                    <Button.ToolTip>
+                                        <ToolTip ToolTipService.ShowOnDisabled="False">
+                                            <TextBlock Text="Generate DSO container for the selected NEO." />
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>
                             </StackPanel>
                             <alt:AltitudeChart
                                     Grid.Row="1"
