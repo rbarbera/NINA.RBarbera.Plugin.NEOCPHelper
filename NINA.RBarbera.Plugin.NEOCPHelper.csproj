@@ -292,6 +292,7 @@
     </Compile>
     <Compile Include="Utility\NEOCPDownloader.cs" />
     <Compile Include="View\AltitudeChart.xaml.cs" />
+    <Compile Include="Utility\AstroUtilExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
