@@ -28,6 +28,7 @@ using NINA.Sequencer.Container;
 using Accord.Diagnostics;
 using System.Diagnostics;
 using NINA.Core.Utility;
+using NINA.Astrometry;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
     
@@ -59,9 +60,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
 
         public override object Clone() {
             var clone = new UpdateNEOEphemerides(profileService, sequenceMediator, nighttimeCalculator) {
-                Issues = issues,
                 Name = Name,
                 Icon = Icon,
+                Category = Category,
+                Description = Description
             };
 
             return clone;
@@ -70,7 +72,9 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
         public override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
             return Task.Run(() => {
                 if (this.Parent is IDeepSkyObjectContainer container) {
-                    this.ErrorBehavior = NINA.Sequencer.Utility.InstructionErrorBehavior.SkipInstructionSetOnError;
+                    if (neocpHelper.ForceSkipOnFailure) {
+                        this.ErrorBehavior = NINA.Sequencer.Utility.InstructionErrorBehavior.SkipInstructionSetOnError;
+                    }
                     var targetName = container.Target.TargetName;
                     progress.Report(new ApplicationStatus() { Status = String.Format("Retrieving {0} ephemerides", targetName) });
                     try {
@@ -81,9 +85,17 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                             Logger.Error(error);
                             throw new SequenceEntityFailedException(string.Join(",", Issues));
                         }
-                        var newEphemerides = ephemerides.First().Value.First().Coordinates;
-                        var newExposure = 17;
-                        var newIntegrationTime = 35;
+
+                        var pixelSize = profileService.ActiveProfile.CameraSettings.PixelSize;
+                        var focalLength = profileService.ActiveProfile.TelescopeSettings.FocalLength;
+                        var scale = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(2 * Math.Atan2(pixelSize / 2000, focalLength)));
+
+                        var firstEphemeride = ephemerides.First().Value.First();
+                        firstEphemeride.SetScales(scale, neocpHelper.MaxLength, neocpHelper.UsedField);
+
+                        var newEphemerides = firstEphemeride.Coordinates;
+                        var newExposure = Math.Min(firstEphemeride.ExpMax, neocpHelper.MaxExposureTime);
+                        var newIntegrationTime = Math.Min(firstEphemeride.TMax, neocpHelper.ExpectedIntegrationTime);
 
                         ItemUtility.UpdateDSOContainerCoordinates(container, newEphemerides);
                         ItemUtility.UpdateTakeExposureItems(container, newExposure);

@@ -18,12 +18,9 @@
         <view:SequenceBlockView DataContext="{Binding}">
             <view:SequenceBlockView.SequenceItemContent>
                 <StackPanel Orientation="Horizontal">
-
-                    <TextBlock VerticalAlignment="Center" Text="{ns:Loc LblSource}" />
-
+                    <TextBlock VerticalAlignment="Center" Text="Sample Text" />
                 </StackPanel>
             </view:SequenceBlockView.SequenceItemContent>
         </view:SequenceBlockView>
     </DataTemplate>
-   
 </ResourceDictionary>
