@@ -41,9 +41,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                     }
 
                     if (condition is TimeSpanCondition timeSpanCondition) {
-                        timeSpanCondition.Hours = endTime.Hour;
-                        timeSpanCondition.Minutes = endTime.Minute;
-                        timeSpanCondition.Seconds = endTime.Second;
+                        var span = endTime - DateTime.Now;
+                        timeSpanCondition.Hours = span.Hours;
+                        timeSpanCondition.Minutes = span.Minutes;
+                        timeSpanCondition.Seconds = span.Seconds;
                         continue;
                     }
                 }
