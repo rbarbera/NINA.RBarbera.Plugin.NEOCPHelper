@@ -27,18 +27,12 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             }
         }
 
-        public static void UpdateEndOfLoop(ISequenceContainer parent, DateTime endTime) {
+        public static void UpdateTimeSpanItems(ISequenceContainer parent, DateTime endTime) {
             if (parent == null)
                 return;
 
             if (parent is SequentialContainer container) {
                 foreach (var condition in container.Conditions) {
-                    if (condition is TimeCondition timeCondition && timeCondition is SystemDateTime) {
-                        timeCondition.Hours = endTime.Hour;
-                        timeCondition.Minutes = endTime.Minute;
-                        timeCondition.Seconds = endTime.Second;
-                        continue;
-                    }
 
                     if (condition is TimeSpanCondition timeSpanCondition) {
                         var span = endTime - DateTime.Now;
@@ -52,7 +46,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                 var items = parent.GetItemsSnapshot();
                 foreach (var item in items) {
                     if (item is ISequenceContainer innerContainer) {
-                        UpdateEndOfLoop(innerContainer, endTime);
+                        UpdateTimeSpanItems(innerContainer, endTime);
                     }
                 }
             }

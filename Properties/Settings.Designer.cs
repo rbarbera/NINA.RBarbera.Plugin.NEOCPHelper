@@ -106,5 +106,17 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
                 this["TargetPrefix"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ForceSkipOnFailure {
+            get {
+                return ((bool)(this["ForceSkipOnFailure"]));
+            }
+            set {
+                this["ForceSkipOnFailure"] = value;
+            }
+        }
     }
 }

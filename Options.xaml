@@ -19,12 +19,13 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="0"
-                Text="Max. Track Length:" />
+                Text="Max. target trace" />
             <StackPanel
                 Grid.Row="0"
                 Grid.Column="1"
@@ -41,7 +42,7 @@
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="1"
-                Text="Max. Exposure:" />
+                Text="Max. exposure" />
             <StackPanel
                 Grid.Row="1"
                 Grid.Column="1"
@@ -58,7 +59,7 @@
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="2"
-                Text="Max. used field:" />
+                Text="Max. used field" />
             <StackPanel
                 Grid.Row="2"
                 Grid.Column="1"
@@ -75,7 +76,7 @@
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="3"
-                Text="Expected Integration:" />
+                Text="Default integration" />
             <StackPanel
                 Grid.Row="3"
                 Grid.Column="1"
@@ -92,20 +93,31 @@
             <TextBlock 
                 Grid.Row="4"
                 Grid.Column="0"
-                Text="NEO target prefix:" />
-            <TextBox 
+                Text="Force skip on failure" />
+            <CheckBox
                 Grid.Row="4"
+                Grid.Column="1"
+                MinWidth="80"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                IsChecked="{Binding ForceSkipOnFailure}" />
+            <TextBlock 
+                Grid.Row="5"
+                Grid.Column="0"
+                Text="NEO target prefix" />
+            <TextBox 
+                Grid.Row="5"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 Width="70"
                 Margin="10,0,2,0"
                 Text="{Binding TargetPrefix}" />
             <TextBlock 
-                Grid.Row="5"
+                Grid.Row="6"
                 Grid.Column="0"
-                Text="NEO Container template:" />
+                Text="NEO container template" />
             <ComboBox
-                Grid.Row="5"
+                Grid.Row="6"
                 Grid.Column="1"                
                 Height="25"
                 MinWidth="70"

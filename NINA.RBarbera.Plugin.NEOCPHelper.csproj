@@ -274,6 +274,9 @@
     <Compile Include="Models\NEOCPEphemeride.cs" />
     <Compile Include="Models\NEOCPField.cs" />
     <Compile Include="Models\NEOCPTarget.cs" />
+    <Compile Include="Sequencer\Instructions\Datatemplate.xaml.cs">
+      <DependentUpon>Datatemplate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Sequencer\Instructions\UpdateNEOEphemerides.cs" />
     <Compile Include="Utility\ItemUtil.cs" />
     <Compile Include="Utility\NEOCPScanner.cs" />
@@ -313,7 +316,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Sequencer\Instructions\InstructionsDictionary.xaml">
+    <Page Include="Sequencer\Instructions\Datatemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

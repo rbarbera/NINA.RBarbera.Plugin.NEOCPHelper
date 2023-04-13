@@ -37,7 +37,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
     [ExportMetadata("Category", "NEOCP Helper")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
-    internal class UpdateNEOEphemerides: SequenceItem, IValidatable {
+    public class UpdateNEOEphemerides: SequenceItem, IValidatable {
 
         private readonly IProfileService profileService;
         private readonly ISequenceMediator sequenceMediator;
@@ -59,7 +59,9 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
 
         public override object Clone() {
             var clone = new UpdateNEOEphemerides(profileService, sequenceMediator, nighttimeCalculator) {
-                Issues = issues
+                Issues = issues,
+                Name = Name,
+                Icon = Icon,
             };
 
             return clone;
@@ -85,7 +87,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
 
                         ItemUtility.UpdateDSOContainerCoordinates(container, newEphemerides);
                         ItemUtility.UpdateTakeExposureItems(container, newExposure);
-                        ItemUtility.UpdateEndOfLoop(container,DateTime.Now.AddMinutes(newIntegrationTime));
+                        ItemUtility.UpdateTimeSpanItems(container,DateTime.Now.AddMinutes(newIntegrationTime));
                         
                     } catch (Exception ex) {
                         var error = String.Format("Ephemerides not found for {0}", targetName);
@@ -98,7 +100,18 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
         }
 
         public bool Validate() {
-            return true;
+            var i = new List<string>();
+            
+            if (false == Parent is IDeepSkyObjectContainer) {
+                i.Add(String.Format("Should be inside a DeepSkyObjectContainer"));
+            }
+
+            Issues = i;
+            return i.Count == 0;
+        }
+
+        public override string ToString() {
+            return $"Category: {Category}, Item: {nameof(UpdateNEOEphemerides)}";
         }
     }
 }

@@ -23,5 +23,8 @@
     <Setting Name="TargetPrefix" Type="System.String" Scope="User">
       <Value Profile="(Default)">NEO_</Value>
     </Setting>
+    <Setting Name="ForceSkipOnFailure" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

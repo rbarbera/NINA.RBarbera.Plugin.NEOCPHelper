@@ -98,6 +98,17 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
             }
         }
 
+        public bool ForceSkipOnFailure {
+            get {
+                return Settings.Default.ForceSkipOnFailure;
+            }
+            set {
+                Settings.Default.ForceSkipOnFailure = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
         public string TargetPrefix {
             get {
                 return Settings.Default.TargetPrefix;
