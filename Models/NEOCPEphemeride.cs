@@ -58,5 +58,11 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
         public double V { get; set; }
         public double speedRA { get; set; }
         public double speedDec { get; set; }
+
+        public Coordinates Coordinates {
+            get {
+                return new Coordinates(Angle.ByDegree(RA), Angle.ByDegree(Dec), Epoch.J2000);
+            }
+        }
     }
 }
