@@ -33,7 +33,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
 
             if (parent is SequentialContainer container) {
                 foreach (var condition in container.Conditions) {
-                    if (condition is TimeCondition timeCondition) {
+                    if (condition is TimeCondition timeCondition && timeCondition is SystemDateTime) {
                         timeCondition.Hours = endTime.Hour;
                         timeCondition.Minutes = endTime.Minute;
                         timeCondition.Seconds = endTime.Second;
@@ -59,7 +59,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         }
 
         public static void UpdateTakeExposureItems(ISequenceContainer parent, double exposureTime) {
-            if (parent != null)
+            if (parent == null)
                 return;
 
             var items = parent.GetItemsSnapshot();

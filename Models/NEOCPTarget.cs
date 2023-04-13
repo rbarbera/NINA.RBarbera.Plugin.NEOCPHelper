@@ -38,6 +38,9 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
                     this.V = first.V;
                     this.speedRA = first.speedRA;
                     this.speedDec = first.speedDec;
+                    this.totalSpeed= first.totalSpeed;
+                    this.TMax = first.TMax;
+                    this.ExpMax = first.ExpMax;
                 }             
             }
         }
@@ -53,27 +56,19 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
         public double NotSeenIn { get; set; }
         public double speedRA { get; set; }
         public double speedDec { get; set; }
-
-        public double totalSpeed {
-            get {
-                return Math.Sqrt(speedRA * speedRA + speedDec * speedDec);
-            }
-        }
-
+        public double totalSpeed { get; set; }
         public int ExpMax { get; internal set; }
         public int TMax { get; internal set; }
 
-
         public void SetScales(double pixelScale, int spotSize, int usedFieldArcmin) {
-            var ppMin = this.totalSpeed/ pixelScale;
-            this.ExpMax = (int)Math.Ceiling(spotSize * 60 / ppMin);
-            this.TMax = (int)Math.Ceiling(usedFieldArcmin * 60 / totalSpeed);
-        }
+            if (Ephemerides.Count == 0)
+                return;
 
-        public double MaxExposure(double pixelScale, int spotSize) {
-            var speed = Math.Max(Math.Abs(speedRA), Math.Abs(speedDec));
-            return (pixelScale * spotSize) / speed * 60.0;
-        } 
+            var first = Ephemerides[0];
+            first.SetScales(pixelScale, spotSize, usedFieldArcmin);
+            this.TMax = first.TMax;
+            this.ExpMax = first.ExpMax;
+        }
 
         public List<NEOCPField> ComputeFields(DateTime startTime, DateTime endTime, double XSize, double YSize) {
             var raSpan = Math.Abs(XSize / speedRA);

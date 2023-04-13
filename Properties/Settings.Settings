@@ -14,5 +14,14 @@
     <Setting Name="SelectedTemplate" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="ExpectedIntegrationTime" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">90</Value>
+    </Setting>
+    <Setting Name="MaxExposureTime" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">180</Value>
+    </Setting>
+    <Setting Name="TargetPrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NEO_</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

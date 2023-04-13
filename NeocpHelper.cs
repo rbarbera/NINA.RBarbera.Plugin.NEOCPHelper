@@ -65,12 +65,45 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
             }
         }
 
+        public int ExpectedIntegrationTime {
+            get {
+                return Settings.Default.ExpectedIntegrationTime;
+            }
+            set {
+                Settings.Default.ExpectedIntegrationTime = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
+        public int MaxExposureTime {
+            get {
+                return Settings.Default.MaxExposureTime;
+            }
+            set {
+                Settings.Default.MaxExposureTime = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
         public string SelectedTemplate {
             get {
                 return Settings.Default.SelectedTemplate;
             }
             set {
                 Settings.Default.SelectedTemplate = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
+        public string TargetPrefix {
+            get {
+                return Settings.Default.TargetPrefix;
+            }
+            set {
+                Settings.Default.TargetPrefix = value;
                 CoreUtil.SaveSettings(Settings.Default);
                 RaisePropertyChanged();
             }

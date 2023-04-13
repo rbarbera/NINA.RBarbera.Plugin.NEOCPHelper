@@ -25,6 +25,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using NINA.Sequencer.Container;
+using Accord.Diagnostics;
+using System.Diagnostics;
+using NINA.Core.Utility;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
     
@@ -71,16 +74,23 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                     try {
                         var ephemerides = NEOCPDownloader.GetEphemerides(targetName, profileService.ActiveProfile.AstrometrySettings);
                         if (ephemerides.Count == 0) {
-                            Issues.Add("Ephemerides not available.");
+                            var error = String.Format("Ephemerides not found for {0}", targetName);
+                            Issues.Add(error);
+                            Logger.Error(error);
                             throw new SequenceEntityFailedException(string.Join(",", Issues));
                         }
-                        var newEp = ephemerides.First().Value.First().Coordinates;
-                        ItemUtility.UpdateDSOContainerCoordinates(container, newEp);
-                        ItemUtility.UpdateTakeExposureItems(container, 17);
-                        ItemUtility.UpdateEndOfLoop(container,DateTime.Now.AddMinutes(35));
+                        var newEphemerides = ephemerides.First().Value.First().Coordinates;
+                        var newExposure = 17;
+                        var newIntegrationTime = 35;
+
+                        ItemUtility.UpdateDSOContainerCoordinates(container, newEphemerides);
+                        ItemUtility.UpdateTakeExposureItems(container, newExposure);
+                        ItemUtility.UpdateEndOfLoop(container,DateTime.Now.AddMinutes(newIntegrationTime));
                         
                     } catch (Exception ex) {
-                        Issues.Add("Ephemerides not available.");
+                        var error = String.Format("Ephemerides not found for {0}", targetName);
+                        Issues.Add(error);
+                        Logger.Error(ex);
                         throw new SequenceEntityFailedException(string.Join(",", Issues));
                     }
                 }

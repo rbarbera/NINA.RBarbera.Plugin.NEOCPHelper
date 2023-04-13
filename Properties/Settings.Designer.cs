@@ -70,5 +70,41 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
                 this["SelectedTemplate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("90")]
+        public int ExpectedIntegrationTime {
+            get {
+                return ((int)(this["ExpectedIntegrationTime"]));
+            }
+            set {
+                this["ExpectedIntegrationTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("180")]
+        public int MaxExposureTime {
+            get {
+                return ((int)(this["MaxExposureTime"]));
+            }
+            set {
+                this["MaxExposureTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NEO_")]
+        public string TargetPrefix {
+            get {
+                return ((string)(this["TargetPrefix"]));
+            }
+            set {
+                this["TargetPrefix"] = value;
+            }
+        }
     }
 }

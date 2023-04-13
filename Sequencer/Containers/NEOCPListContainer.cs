@@ -179,38 +179,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
         }
 
-        public string RecomendedExposure {
-            get {
-                if (SelectedNEO == null)
-                    return "--";
-                return String.Format("{0:f0}s", SelectedNEO.MaxExposure(0.66, 4));
-            }
-        }
-
         private void LoadSingleTarget() {
             if (SelectedNEO != null && SelectedNEO?.Designation != null) {
-                /*
-                var fl = profileService.ActiveProfile.TelescopeSettings.FocalLength;
-                var cameraInfo = cameraMediator.GetInfo();
-                var xSize = cameraInfo.XSize * cameraInfo.PixelSize / 1000.0;
-                var ySize = cameraInfo.YSize * cameraInfo.PixelSize / 1000.0;
-
-                var xAng = 2 * Math.Atan2(xSize / 2, fl);
-                var yAng = 2 * Math.Atan2(ySize / 2, fl);
-                var xArcsec = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(xAng));
-                var yArcsec = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(yAng));
-
-                var ow = AstroUtilExtension.ObservabilityWindow(
-                                    NighttimeData.TwilightRiseAndSet,
-                                    profileService.ActiveProfile.AstrometrySettings,
-                                    SelectedNEO.Coordinates()
-                                    );
-
-                NEOFields = new AsyncObservableCollection<NEOCPField>(SelectedNEO.ComputeFields(starRise, starSet , xArcsec, yArcsec));
-                */
-
-
-
                 Target.TargetName = SelectedNEO.Designation;
                 Target.InputCoordinates.Coordinates = SelectedNEO.Coordinates();
                 Target.DeepSkyObject.Coordinates = SelectedNEO.Coordinates();
@@ -236,7 +206,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                     InputCoordinates = new InputCoordinates() { Coordinates = SelectedNEO.Coordinates() },
                     Rotation = 0
                 };
-                fieldContainer.Name = SelectedNEO.Designation;
+                fieldContainer.Name = neocpHelper.TargetPrefix + SelectedNEO.Designation;
                     
                 _ = _dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
                     lock (Items) {
