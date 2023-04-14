@@ -26,11 +26,12 @@
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="0"
+                VerticalAlignment="Center"
                 Text="Max. target trace" />
             <ninactrl:UnitTextBox 
                 Grid.Row="0"
                 Grid.Column="1"
-                Margin="10,0,0,0"
+                Margin="10,5,0,0"
                 HorizontalAlignment="Left"
                 Text="{Binding MaxLength}"
                 ToolTip="Fast moving NEOs will left a trail on long exposures. We use this limit to adjust the per frame exposure time."
@@ -38,11 +39,12 @@
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="1"
+                VerticalAlignment="Center"
                 Text="Default exposure" />
             <ninactrl:UnitTextBox 
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="10,0,0,0"
+                Margin="10,5,0,0"
                 HorizontalAlignment="Left"
                 Text="{Binding MaxExposureTime}"
                 ToolTip="If NEO's speed allow us, we will use this time as frame exposure"
@@ -50,11 +52,12 @@
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="2"
+                VerticalAlignment="Center"
                 Text="Default sensor size" />
             <ninactrl:UnitTextBox
                 Grid.Row="2"
                 Grid.Column="1"
-                Margin="10,0,0,0"
+                Margin="10,5,0,0"
                 HorizontalAlignment="Left"
                 Text="{Binding UsedField}"
                 ToolTip="Sensor size used for planning. When the UpdateNEOEphemerides instruction is used, the real sensor size adjusted by the &quot;Sensor area used&quot;"
@@ -88,11 +91,12 @@
             <TextBlock 
                 Grid.Row="4"
                 Grid.Column="0"
+                VerticalAlignment="Center"
                 Text="Default integration" />
             <ninactrl:UnitTextBox
                 Grid.Row="4"
                 Grid.Column="1"
-                Margin="10,0,0,0"
+                Margin="10,5,0,0"
                 HorizontalAlignment="Left"
                 Text="{Binding ExpectedIntegrationTime}"
                 ToolTip="If NEO's speed allow us, we will use this time when programming the &quot;Loop For Time Span&quot; inside the template"
@@ -101,6 +105,7 @@
             <TextBlock 
                 Grid.Row="5"
                 Grid.Column="0"
+                VerticalAlignment="Center"
                 Text="Force skip on failure" />
             <CheckBox
                 Grid.Row="5"
@@ -108,30 +113,33 @@
                 MinWidth="80"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
+                Margin="0,5,0,0"
                 ToolTip="When the UpdateNEOEphemerides fails, it's not safe to keep with the old data. You can force this &quot;skip on failure&quot; to avoid wasting observation time."
                 IsChecked="{Binding ForceSkipOnFailure}" />
             <TextBlock 
                 Grid.Row="6"
                 Grid.Column="0"
+                VerticalAlignment="Center"
                 Text="NEO target prefix" />
             <TextBox 
                 Grid.Row="6"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 Width="70"
-                Margin="10,0,2,0"
+                Margin="10,5,0,0"
                 ToolTip="The name used for the template clones inserted on the sequencer."
                 Text="{Binding TargetPrefix}" />
             <TextBlock 
                 Grid.Row="7"
                 Grid.Column="0"
+                VerticalAlignment="Center"
                 Text="NEO container template" />
             <ComboBox
                 Grid.Row="7"
                 Grid.Column="1"                
                 Height="25"
                 MinWidth="70"
-                Margin="10,0,2,0"
+                Margin="10,5,0,0"
                 IsEditable="False"
                 IsTextSearchEnabled="False"
                 ToolTip="Choose a template that is based on a DeepSkyObjectContainer. For better results, one of the first instruction should be an &quot;UpdateNEOEphemerides&quot; to adjust all the data on the template for the instant the observation begins. Also, it will be useful to insert a &quot;Loop For Time Span&quot;"

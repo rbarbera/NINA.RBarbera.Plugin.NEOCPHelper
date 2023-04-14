@@ -51,7 +51,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
         private readonly ICameraMediator cameraMediator;
         private INighttimeCalculator nighttimeCalculator;
         private NeocpHelper neocpHelper;
-        private double _sensorAreaUsed;
+        private double _sensorAreaUsage;
 
         [ImportingConstructor]
         public UpdateNEOEphemerides(IProfileService profileService,
@@ -67,7 +67,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
             this.MaxExposure = neocpHelper.MaxExposureTime;
             this.MaxTrackLenght = neocpHelper.MaxLength;
             this.IntegrationTime = neocpHelper.ExpectedIntegrationTime;
-            this.SensorAreaUsed = 0.8d;
+            this.SensorAreaUsage = neocpHelper.SensorAreaUsage;
         }
 
         private UpdateNEOEphemerides(UpdateNEOEphemerides cloneMe) : this(cloneMe.profileService, cloneMe.sequenceMediator, cloneMe.cameraMediator, cloneMe.nighttimeCalculator) {
@@ -81,10 +81,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
         public int MaxTrackLenght { get => _maxTrackLenght; set => _maxTrackLenght = value; }
         public int MaxExposure { get => _maxExposure; set => _maxExposure = value; }
         public int IntegrationTime { get => _integrationTime; set => _integrationTime = value; }
-        public double SensorAreaUsed {
-            get => _sensorAreaUsed;
+        public double SensorAreaUsage {
+            get => _sensorAreaUsage;
             set {
-                _sensorAreaUsed = value;
+                _sensorAreaUsage = value;
                 RaisePropertyChanged();
             }
         }
@@ -108,7 +108,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                         }
 
                         var cameraInfo = cameraMediator.GetInfo();
-                        var cameraSize = Math.Min(cameraInfo.XSize, cameraInfo.YSize) * SensorAreaUsed;
+                        var cameraSize = Math.Min(cameraInfo.XSize, cameraInfo.YSize) * SensorAreaUsage;
 
 
                         var pixelSize = cameraInfo.PixelSize;

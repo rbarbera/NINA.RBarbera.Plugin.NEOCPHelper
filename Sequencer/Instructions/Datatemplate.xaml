@@ -84,11 +84,11 @@
             Maximum="0.95"
             Minimum="0.05"
             TickFrequency="0.05"
-            Value="{Binding SensorAreaUsed, UpdateSourceTrigger=PropertyChanged}" />
+            Value="{Binding SensorAreaUsage, UpdateSourceTrigger=PropertyChanged}" />
         <TextBlock
             Margin="5,0,0,0"    
             VerticalAlignment="Center"
-            Text="{Binding SensorAreaUsed, Mode=OneWay, Converter={StaticResource PercentageConverter}}" />
+            Text="{Binding SensorAreaUsage, Mode=OneWay, Converter={StaticResource PercentageConverter}}" />
         <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="%" />
     </WrapPanel>
 
