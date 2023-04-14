@@ -118,5 +118,17 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
                 this["ForceSkipOnFailure"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.8")]
+        public double SensorAreaUsage {
+            get {
+                return ((double)(this["SensorAreaUsage"]));
+            }
+            set {
+                this["SensorAreaUsage"] = value;
+            }
+        }
     }
 }

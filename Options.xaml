@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     x:Class="NINA.RBarbera.Plugin.NeocpHelper.Options"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:ninactrl="clr-namespace:NINACustomControlLibrary;assembly=NINACustomControlLibrary">
     <!--  This data template will be displayed in N.I.N.A. on the options->plugin tab with the datacontext of the TestPlugin instance  -->
     <!--  In order for this datatemplate to be picked correctly, the key has to follow the naming convention of <IPlugin.Name>_Options -->
     <!--  Furthermore the Resource Dictionary has to be exported via code behind export attributes  -->
@@ -20,110 +20,121 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="0"
                 Text="Max. target trace" />
-            <StackPanel
+            <ninactrl:UnitTextBox 
                 Grid.Row="0"
                 Grid.Column="1"
                 Margin="10,0,0,0"
-                Orientation="Horizontal"
-                HorizontalAlignment="Left">
-                <TextBox 
-                    Width="30"
-                    Text="{Binding MaxLength}" />
-                <TextBlock
-                    Margin="2,0,2,0"
-                    Text="px" />
-            </StackPanel>
+                HorizontalAlignment="Left"
+                Text="{Binding MaxLength}"
+                ToolTip="Fast moving NEOs will left a trail on long exposures. We use this limit to adjust the per frame exposure time."
+                Unit="px" />
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="1"
-                Text="Max. exposure" />
-            <StackPanel
+                Text="Default exposure" />
+            <ninactrl:UnitTextBox 
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="10,0,0,0"
-                Orientation="Horizontal"
-                HorizontalAlignment="Left">
-                <TextBox 
-                    Width="30"
-                    Text="{Binding MaxExposureTime}" />
-                <TextBlock
-                    Margin="2,0,2,0"
-                    Text="s" />
-            </StackPanel>
+                HorizontalAlignment="Left"
+                Text="{Binding MaxExposureTime}"
+                ToolTip="If NEO's speed allow us, we will use this time as frame exposure"
+                Unit="s" />
             <TextBlock 
                 Grid.Column="0"
                 Grid.Row="2"
-                Text="Max. used field" />
-            <StackPanel
+                Text="Default sensor size" />
+            <ninactrl:UnitTextBox
                 Grid.Row="2"
                 Grid.Column="1"
                 Margin="10,0,0,0"
-                Orientation="Horizontal"
-                HorizontalAlignment="Left">
-                <TextBox 
-                    Width="30"
-                    Text="{Binding UsedField}" />
-                <TextBlock
-                    Margin="2,0,2,0"
-                    Text="arcmin" />
-            </StackPanel>
+                HorizontalAlignment="Left"
+                Text="{Binding UsedField}"
+                ToolTip="Sensor size used for planning. When the UpdateNEOEphemerides instruction is used, the real sensor size adjusted by the &quot;Sensor area used&quot;"
+                Unit="arcmin"/>
             <TextBlock 
-                Grid.Column="0"
                 Grid.Row="3"
-                Text="Default integration" />
+                Grid.Column="0"
+                Text="Sensor area used"
+                VerticalAlignment="Center" />
             <StackPanel
                 Grid.Row="3"
                 Grid.Column="1"
                 Margin="10,0,0,0"
                 Orientation="Horizontal"
                 HorizontalAlignment="Left">
-                <TextBox 
-                    Width="30"
-                    Text="{Binding ExpectedIntegrationTime}" />
+                <Slider 
+                    VerticalAlignment="Center"
+                    IsSnapToTickEnabled="True"
+                    Maximum="0.95"
+                    Minimum="0.05"
+                    TickFrequency="0.05"
+                    ToolTip="Percentaje of the dimensions of the sensor used to compute the maximum integration time"
+                    Value="{Binding SensorAreaUsage, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock
-                    Margin="2,0,2,0"
-                    Text="min" />
+                    Margin="5,0,0,0"    
+                    VerticalAlignment="Center"
+                    Text="{Binding SensorAreaUsage, Mode=OneWay, Converter={StaticResource PercentageConverter}}" />
+                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="%" />
             </StackPanel>
+
             <TextBlock 
                 Grid.Row="4"
+                Grid.Column="0"
+                Text="Default integration" />
+            <ninactrl:UnitTextBox
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
+                Text="{Binding ExpectedIntegrationTime}"
+                ToolTip="If NEO's speed allow us, we will use this time when programming the &quot;Loop For Time Span&quot; inside the template"
+                Unit="min"/>
+                
+            <TextBlock 
+                Grid.Row="5"
                 Grid.Column="0"
                 Text="Force skip on failure" />
             <CheckBox
-                Grid.Row="4"
+                Grid.Row="5"
                 Grid.Column="1"
                 MinWidth="80"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
+                ToolTip="When the UpdateNEOEphemerides fails, it's not safe to keep with the old data. You can force this &quot;skip on failure&quot; to avoid wasting observation time."
                 IsChecked="{Binding ForceSkipOnFailure}" />
             <TextBlock 
-                Grid.Row="5"
+                Grid.Row="6"
                 Grid.Column="0"
                 Text="NEO target prefix" />
             <TextBox 
-                Grid.Row="5"
+                Grid.Row="6"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 Width="70"
                 Margin="10,0,2,0"
+                ToolTip="The name used for the template clones inserted on the sequencer."
                 Text="{Binding TargetPrefix}" />
             <TextBlock 
-                Grid.Row="6"
+                Grid.Row="7"
                 Grid.Column="0"
                 Text="NEO container template" />
             <ComboBox
-                Grid.Row="6"
+                Grid.Row="7"
                 Grid.Column="1"                
                 Height="25"
                 MinWidth="70"
                 Margin="10,0,2,0"
                 IsEditable="False"
                 IsTextSearchEnabled="False"
+                ToolTip="Choose a template that is based on a DeepSkyObjectContainer. For better results, one of the first instruction should be an &quot;UpdateNEOEphemerides&quot; to adjust all the data on the template for the instant the observation begins. Also, it will be useful to insert a &quot;Loop For Time Span&quot;"
                 ItemsSource="{Binding AvailableTemplates}"
                 SelectedValue="{Binding SelectedTemplate}">
             </ComboBox>

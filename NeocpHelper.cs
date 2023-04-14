@@ -65,6 +65,17 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
             }
         }
 
+        public double SensorAreaUsage {
+            get {
+                return Settings.Default.SensorAreaUsage;
+            }
+            set {
+                Settings.Default.SensorAreaUsage = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
         public int ExpectedIntegrationTime {
             get {
                 return Settings.Default.ExpectedIntegrationTime;

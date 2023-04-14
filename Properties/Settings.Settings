@@ -26,5 +26,8 @@
     <Setting Name="ForceSkipOnFailure" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="SensorAreaUsage" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.8</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
