@@ -29,6 +29,7 @@ using Accord.Diagnostics;
 using System.Diagnostics;
 using NINA.Core.Utility;
 using NINA.Astrometry;
+using NINA.Sequencer.SequenceItem.Camera;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
     
@@ -55,19 +56,16 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
             this.neocpHelper = new NeocpHelper(sequenceMediator);
         }
 
-        private IList<string> issues = new List<string>();
-        public IList<string> Issues { get => issues; set { issues = value; RaisePropertyChanged(); } }
+        private UpdateNEOEphemerides(UpdateNEOEphemerides cloneMe) : this(cloneMe.profileService, cloneMe.sequenceMediator, cloneMe.nighttimeCalculator) {
+            CopyMetaData(cloneMe);
+        }
 
         public override object Clone() {
-            var clone = new UpdateNEOEphemerides(profileService, sequenceMediator, nighttimeCalculator) {
-                Name = Name,
-                Icon = Icon,
-                Category = Category,
-                Description = Description
-            };
-
-            return clone;
+            return new UpdateNEOEphemerides(this);
         }
+
+        private IList<string> issues = new List<string>();
+        public IList<string> Issues { get => issues; set { issues = value; RaisePropertyChanged(); } }
 
         public override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
             return Task.Run(() => {

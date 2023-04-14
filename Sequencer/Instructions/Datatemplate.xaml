@@ -15,7 +15,7 @@
     xmlns:view="clr-namespace:NINA.View.Sequencer;assembly=NINA.Sequencer">
 
     <DataTemplate DataType="{x:Type local:UpdateNEOEphemerides}">
-        <view:SequenceBlockView DataContext="{Binding}">
+        <view:SequenceBlockView>
             <view:SequenceBlockView.SequenceItemContent>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="Sample Text" />

@@ -12,11 +12,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel.Composition;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
     /// <summary>
     /// Interaction logic for Datatemplate.xaml
     /// </summary>
+    [Export(typeof(ResourceDictionary))]
     public partial class Datatemplate : ResourceDictionary {
         public Datatemplate() {
             InitializeComponent();
