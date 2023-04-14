@@ -14,13 +14,90 @@
     xmlns:s="clr-namespace:System;assembly=mscorlib"
     xmlns:view="clr-namespace:NINA.View.Sequencer;assembly=NINA.Sequencer">
 
+    <WrapPanel
+        x:Key="SessionDetails"
+        x:Shared="false"
+        Orientation="Horizontal">
+ 
+        <TextBlock
+            Margin="7.5,0,7.5,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="Max. Exposure" />
+        <ninactrl:UnitTextBox
+            MinWidth="40"
+            Margin="5,0,0,0"
+            VerticalAlignment="Center"
+            VerticalContentAlignment="Center"
+            Text="{Binding MaxExposure}"
+            TextAlignment="Right"
+            Unit="s" />
+        <TextBlock
+            Margin="7.5,0,7.5,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="|" />
+        <TextBlock
+            Margin="7.5,0,7.5,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="Max. Track lenght" />
+        <ninactrl:UnitTextBox
+            MinWidth="40"
+            Margin="5,0,0,0"
+            VerticalAlignment="Center"
+            VerticalContentAlignment="Center"
+            Text="{Binding MaxTrackLenght}"
+            TextAlignment="Right"
+            Unit="px" />
+        <TextBlock
+            Margin="7.5,0,7.5,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="|" />
+        <TextBlock
+            Margin="7.5,0,7.5,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="Integration time" />
+        <ninactrl:UnitTextBox
+            MinWidth="40"
+            Margin="5,0,0,0"
+            VerticalAlignment="Center"
+            VerticalContentAlignment="Center"
+            Text="{Binding IntegrationTime}"
+            TextAlignment="Right"
+            Unit="min" />
+        <TextBlock
+            Margin="7.5,0,7.5,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="|" />
+        <TextBlock
+            Margin="7.5,0,7.5,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="Sensor used" />
+        <Slider 
+            VerticalAlignment="Center"
+            IsSnapToTickEnabled="True"
+            Maximum="0.95"
+            Minimum="0.05"
+            TickFrequency="0.05"
+            Value="{Binding SensorAreaUsed, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock
+            Margin="5,0,0,0"    
+            VerticalAlignment="Center"
+            Text="{Binding SensorAreaUsed, Mode=OneWay, Converter={StaticResource PercentageConverter}}" />
+        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="%" />
+    </WrapPanel>
+
     <DataTemplate DataType="{x:Type local:UpdateNEOEphemerides}">
-        <view:SequenceBlockView>
+        <view:SequenceBlockView DataContext="{Binding}">
             <view:SequenceBlockView.SequenceItemContent>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" Text="Sample Text" />
-                </StackPanel>
+                <ContentPresenter Content="{StaticResource SessionDetails}" />
             </view:SequenceBlockView.SequenceItemContent>
         </view:SequenceBlockView>
     </DataTemplate>
+
 </ResourceDictionary>

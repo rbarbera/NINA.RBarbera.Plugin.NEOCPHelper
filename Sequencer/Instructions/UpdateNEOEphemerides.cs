@@ -32,31 +32,45 @@ using NINA.Astrometry;
 using NINA.Sequencer.SequenceItem.Camera;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
-    
-    [ExportMetadata("Name", "Update NEO ephemerides")]
-    [ExportMetadata("Description", "Get the most recent ephemerides for the NEO defined on the container and update Coordinates, time conditions and exposure")]
+
+    [ExportMetadata("Name", "Update NEO session")]
+    [ExportMetadata("Description", "Get the most recent ephemerides for the NEO defined on the container and update coordinates, time conditions and exposure")]
     [ExportMetadata("Icon", "ImpactorSVG")]
     [ExportMetadata("Category", "NEOCP Helper")]
     [Export(typeof(ISequenceItem))]
     [JsonObject(MemberSerialization.OptIn)]
-    public class UpdateNEOEphemerides: SequenceItem, IValidatable {
+    public class UpdateNEOEphemerides : SequenceItem, IValidatable {
+
+        private IList<string> issues = new List<string>();
+        private int _maxTrackLenght;
+        private int _maxExposure;
+        private int _integrationTime;
 
         private readonly IProfileService profileService;
         private readonly ISequenceMediator sequenceMediator;
+        private readonly ICameraMediator cameraMediator;
         private INighttimeCalculator nighttimeCalculator;
         private NeocpHelper neocpHelper;
+        private double _sensorAreaUsed;
 
         [ImportingConstructor]
         public UpdateNEOEphemerides(IProfileService profileService,
                 ISequenceMediator sequenceMediator,
-                INighttimeCalculator nighttimeCalculator) { 
+                ICameraMediator cameraMediator,
+                INighttimeCalculator nighttimeCalculator) {
             this.profileService = profileService;
             this.sequenceMediator = sequenceMediator;
+            this.cameraMediator = cameraMediator;
             this.nighttimeCalculator = nighttimeCalculator;
             this.neocpHelper = new NeocpHelper(sequenceMediator);
+
+            this.MaxExposure = neocpHelper.MaxExposureTime;
+            this.MaxTrackLenght = neocpHelper.MaxLength;
+            this.IntegrationTime = neocpHelper.ExpectedIntegrationTime;
+            this.SensorAreaUsed = 0.8d;
         }
 
-        private UpdateNEOEphemerides(UpdateNEOEphemerides cloneMe) : this(cloneMe.profileService, cloneMe.sequenceMediator, cloneMe.nighttimeCalculator) {
+        private UpdateNEOEphemerides(UpdateNEOEphemerides cloneMe) : this(cloneMe.profileService, cloneMe.sequenceMediator, cloneMe.cameraMediator, cloneMe.nighttimeCalculator) {
             CopyMetaData(cloneMe);
         }
 
@@ -64,7 +78,16 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
             return new UpdateNEOEphemerides(this);
         }
 
-        private IList<string> issues = new List<string>();
+        public int MaxTrackLenght { get => _maxTrackLenght; set => _maxTrackLenght = value; }
+        public int MaxExposure { get => _maxExposure; set => _maxExposure = value; }
+        public int IntegrationTime { get => _integrationTime; set => _integrationTime = value; }
+        public double SensorAreaUsed {
+            get => _sensorAreaUsed;
+            set {
+                _sensorAreaUsed = value;
+                RaisePropertyChanged();
+            }
+        }
         public IList<string> Issues { get => issues; set { issues = value; RaisePropertyChanged(); } }
 
         public override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
@@ -84,21 +107,26 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                             throw new SequenceEntityFailedException(string.Join(",", Issues));
                         }
 
-                        var pixelSize = profileService.ActiveProfile.CameraSettings.PixelSize;
+                        var cameraInfo = cameraMediator.GetInfo();
+                        var cameraSize = Math.Min(cameraInfo.XSize, cameraInfo.YSize) * SensorAreaUsed;
+
+
+                        var pixelSize = cameraInfo.PixelSize;
                         var focalLength = profileService.ActiveProfile.TelescopeSettings.FocalLength;
                         var scale = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(2 * Math.Atan2(pixelSize / 2000, focalLength)));
+                        var fieldSize = (int)Math.Floor(AstroUtil.ArcsecToArcmin(cameraSize * scale));
 
                         var firstEphemeride = ephemerides.First().Value.First();
-                        firstEphemeride.SetScales(scale, neocpHelper.MaxLength, neocpHelper.UsedField);
+                        firstEphemeride.SetScales(scale, MaxTrackLenght, fieldSize);
 
                         var newEphemerides = firstEphemeride.Coordinates;
-                        var newExposure = Math.Min(firstEphemeride.ExpMax, neocpHelper.MaxExposureTime);
-                        var newIntegrationTime = Math.Min(firstEphemeride.TMax, neocpHelper.ExpectedIntegrationTime);
+                        var newExposure = Math.Min(firstEphemeride.ExpMax, MaxExposure);
+                        var newIntegrationTime = Math.Min(firstEphemeride.TMax, IntegrationTime);
 
                         ItemUtility.UpdateDSOContainerCoordinates(container, newEphemerides);
                         ItemUtility.UpdateTakeExposureItems(container, newExposure);
-                        ItemUtility.UpdateTimeSpanItems(container,DateTime.Now.AddMinutes(newIntegrationTime));
-                        
+                        ItemUtility.UpdateTimeSpanItems(container, DateTime.Now.AddMinutes(newIntegrationTime));
+
                     } catch (Exception ex) {
                         var error = String.Format("Ephemerides not found for {0}", targetName);
                         Issues.Add(error);
@@ -111,9 +139,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
 
         public bool Validate() {
             var i = new List<string>();
-            
+
             if (false == Parent is IDeepSkyObjectContainer) {
                 i.Add(String.Format("Should be inside a DeepSkyObjectContainer"));
+            }
+
+            if (cameraMediator.GetDevice() == null || cameraMediator.GetDevice()?.Connected == false) {
+                i.Add("Camera is not connected");
             }
 
             Issues = i;
