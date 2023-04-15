@@ -27,7 +27,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             }
         }
 
-        public static void UpdateTimeSpanItems(ISequenceContainer parent, DateTime endTime) {
+        public static void UpdateTimeSpanItems(ISequenceContainer parent, TimeSpan span) {
             if (parent == null)
                 return;
 
@@ -35,18 +35,19 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                 foreach (var condition in container.Conditions) {
 
                     if (condition is TimeSpanCondition timeSpanCondition) {
-                        var span = endTime - DateTime.Now;
-                        timeSpanCondition.Hours = span.Hours;
-                        timeSpanCondition.Minutes = span.Minutes;
-                        timeSpanCondition.Seconds = span.Seconds;
-                        continue;
+                        if (span.Ticks < timeSpanCondition.RemainingTime.Ticks) {
+                            timeSpanCondition.Hours = span.Hours;
+                            timeSpanCondition.Minutes = span.Minutes;
+                            timeSpanCondition.Seconds = span.Seconds;
+                            continue;
+                        }
                     }
                 }
             } else {
                 var items = parent.GetItemsSnapshot();
                 foreach (var item in items) {
                     if (item is ISequenceContainer innerContainer) {
-                        UpdateTimeSpanItems(innerContainer, endTime);
+                        UpdateTimeSpanItems(innerContainer, span);
                     }
                 }
             }
@@ -60,14 +61,38 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             foreach (var item in items) {
                 var listItem = item as TakeExposure;
                 if (listItem != null && listItem.ImageType == CaptureSequence.ImageTypes.LIGHT) {
-                    listItem.ExposureTime = exposureTime;
+                    var binning = Math.Max(listItem.Binning.X, listItem.Binning.Y);
+                    listItem.ExposureTime = Math.Min(exposureTime, listItem.ExposureTime) * binning;
                     continue;
                 }
+                    
                 var listSubItem = item as TakeSubframeExposure;
                 if (listSubItem != null && listSubItem.ImageType == CaptureSequence.ImageTypes.LIGHT) {
-                    listSubItem.ExposureTime = exposureTime;
+                    var binning = Math.Max(listSubItem.Binning.X, listSubItem.Binning.Y);
+                    listSubItem.ExposureTime = Math.Min(exposureTime, listSubItem.ExposureTime) * binning;
                     continue;
                 }
+
+                var manyItem = item as TakeManyExposures;
+                if (manyItem != null) {
+                    var manyExposure = manyItem.GetTakeExposure();
+                    if (manyExposure.ImageType == CaptureSequence.ImageTypes.LIGHT) {
+                        var binning = Math.Max(manyExposure.Binning.X, manyExposure.Binning.Y);
+                        manyExposure.ExposureTime = Math.Min(exposureTime, manyExposure.ExposureTime) * binning;
+                        continue;
+                    }
+                }
+
+                var smartItem = item as SmartExposure;
+                if (smartItem != null) {
+                    var smartExposure = smartItem.GetTakeExposure();
+                    if (smartExposure.ImageType == CaptureSequence.ImageTypes.LIGHT) {
+                        var binning = Math.Max(smartExposure.Binning.X, smartExposure.Binning.Y);
+                        smartExposure.ExposureTime = Math.Min(exposureTime, smartExposure.ExposureTime) * binning;
+                        continue;
+                    }
+                }
+
                 var container = item as ISequenceContainer;
                 if (container != null) {
                     UpdateTakeExposureItems(container, exposureTime);

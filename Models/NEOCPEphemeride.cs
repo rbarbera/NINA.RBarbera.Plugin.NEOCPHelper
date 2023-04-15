@@ -47,12 +47,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
         }
 
         public int ExpMax { get; internal set; }
-        public int TMax { get; internal set; }
 
-        public void SetScales(double pixelScale, int spotSize, double usedFieldArcmin) {
+        public void SetScales(double pixelScale, int spotSize) {
             var ppMin = this.totalSpeed / pixelScale;
             this.ExpMax = (int)Math.Ceiling(spotSize * 60 / ppMin);
-            this.TMax = (int)Math.Ceiling(usedFieldArcmin * 60 / totalSpeed);
         }
 
         public NEOCPField Field(double fieldDiameter) {

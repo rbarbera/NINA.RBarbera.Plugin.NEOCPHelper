@@ -43,8 +43,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
 
         private IList<string> issues = new List<string>();
         private int _maxTrackLenght;
-        private int _maxExposure;
-        private int _integrationTime;
 
         private readonly IProfileService profileService;
         private readonly ISequenceMediator sequenceMediator;
@@ -64,9 +62,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
             this.nighttimeCalculator = nighttimeCalculator;
             this.neocpHelper = new NeocpHelper(sequenceMediator);
 
-            this.MaxExposure = neocpHelper.MaxExposureTime;
             this.MaxTrackLenght = neocpHelper.MaxLength;
-            this.IntegrationTime = neocpHelper.ExpectedIntegrationTime;
             this.SensorAreaUsage = neocpHelper.SensorAreaUsage;
         }
 
@@ -80,10 +76,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
 
         [JsonProperty]
         public int MaxTrackLenght { get => _maxTrackLenght; set => _maxTrackLenght = value; }
-        [JsonProperty]
-        public int MaxExposure { get => _maxExposure; set => _maxExposure = value; }
-        [JsonProperty] 
-        public int IntegrationTime { get => _integrationTime; set => _integrationTime = value; }
+        
         [JsonProperty]
         public double SensorAreaUsage {
             get => _sensorAreaUsage;
@@ -119,14 +112,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                         var fieldSize = AstroUtil.ArcsecToArcmin(cameraSize * scale);
 
                         var newEphemerides = ephemerides.First().Value.First();
-                        newEphemerides.SetScales(pixelSize, MaxTrackLenght, fieldSize);
+                        newEphemerides.SetScales(pixelSize, MaxTrackLenght);
 
                         var field = newEphemerides.Field(fieldSize);
-                        var newExposure = Math.Min(newEphemerides.ExpMax, MaxExposure);
 
                         ItemUtility.UpdateDSOContainerCoordinates(container, field.Center);
-                        ItemUtility.UpdateTakeExposureItems(container, newExposure);
-                        ItemUtility.UpdateTimeSpanItems(container, DateTime.Now + field.Duration);
+                        ItemUtility.UpdateTakeExposureItems(container, newEphemerides.ExpMax);
+                        ItemUtility.UpdateTimeSpanItems(container, field.Duration);
                     } catch (Exception ex) {
                         var error = String.Format("Ephemerides not found for {0}", targetName);
                         Issues.Add(error);

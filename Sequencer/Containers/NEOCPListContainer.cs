@@ -274,7 +274,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             var scale = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(2 * Math.Atan2(pixelSize / 2000, focalLength)));
 
             var list = NEOCPDownloader.Get(profileService.ActiveProfile.AstrometrySettings);
-            list.ForEach(e => e.SetScales(scale, neocpHelper.MaxLength, neocpHelper.UsedField)) ;
+            list.ForEach(e => e.SetScales(scale, neocpHelper.MaxLength)) ;
 
             return new AsyncObservableCollection<NEOCPTarget>(list);
         }

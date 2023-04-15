@@ -41,7 +41,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
                     this.speedRA = first.speedRA;
                     this.speedDec = first.speedDec;
                     this.totalSpeed= first.totalSpeed;
-                    this.TMax = first.TMax;
                     this.ExpMax = first.ExpMax;
                 }             
             }
@@ -60,15 +59,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
         public double speedDec { get; set; }
         public double totalSpeed { get; set; }
         public int ExpMax { get; internal set; }
-        public int TMax { get; internal set; }
 
-        public void SetScales(double pixelScale, int spotSize, int usedFieldArcmin) {
+        public void SetScales(double pixelScale, int spotSize) {
             if (Ephemerides == null || Ephemerides.Count == 0)
                 return;
 
             var first = Ephemerides[0];
-            first.SetScales(pixelScale, spotSize, usedFieldArcmin);
-            this.TMax = first.TMax;
+            first.SetScales(pixelScale, spotSize);
             this.ExpMax = first.ExpMax;
         }
 

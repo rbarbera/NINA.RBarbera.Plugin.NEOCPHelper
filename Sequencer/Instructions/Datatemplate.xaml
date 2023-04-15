@@ -23,24 +23,6 @@
             Margin="7.5,0,7.5,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Text="Max. Exposure" />
-        <ninactrl:UnitTextBox
-            MinWidth="40"
-            Margin="5,0,0,0"
-            VerticalAlignment="Center"
-            VerticalContentAlignment="Center"
-            Text="{Binding MaxExposure}"
-            TextAlignment="Right"
-            Unit="s" />
-        <TextBlock
-            Margin="7.5,0,7.5,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Text="|" />
-        <TextBlock
-            Margin="7.5,0,7.5,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
             Text="Max. Track lenght" />
         <ninactrl:UnitTextBox
             MinWidth="40"
@@ -55,19 +37,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Text="|" />
-        <TextBlock
-            Margin="7.5,0,7.5,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Text="Integration time" />
-        <ninactrl:UnitTextBox
-            MinWidth="40"
-            Margin="5,0,0,0"
-            VerticalAlignment="Center"
-            VerticalContentAlignment="Center"
-            Text="{Binding IntegrationTime}"
-            TextAlignment="Right"
-            Unit="min" />
+        
         <TextBlock
             Margin="7.5,0,7.5,0"
             HorizontalAlignment="Center"

@@ -36,32 +36,7 @@
                 Text="{Binding MaxLength}"
                 ToolTip="Fast moving NEOs will left a trail on long exposures. We use this limit to adjust the per frame exposure time."
                 Unit="px" />
-            <TextBlock 
-                Grid.Column="0"
-                Grid.Row="1"
-                VerticalAlignment="Center"
-                Text="Default exposure" />
-            <ninactrl:UnitTextBox 
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="10,5,0,0"
-                HorizontalAlignment="Left"
-                Text="{Binding MaxExposureTime}"
-                ToolTip="If NEO's speed allow us, we will use this time as frame exposure"
-                Unit="s" />
-            <TextBlock 
-                Grid.Column="0"
-                Grid.Row="2"
-                VerticalAlignment="Center"
-                Text="Default sensor size" />
-            <ninactrl:UnitTextBox
-                Grid.Row="2"
-                Grid.Column="1"
-                Margin="10,5,0,0"
-                HorizontalAlignment="Left"
-                Text="{Binding UsedField}"
-                ToolTip="Sensor size used for planning. When the UpdateNEOEphemerides instruction is used, the real sensor size adjusted by the &quot;Sensor area used&quot;"
-                Unit="arcmin"/>
+           
             <TextBlock 
                 Grid.Row="3"
                 Grid.Column="0"
@@ -88,20 +63,6 @@
                 <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="%" />
             </StackPanel>
 
-            <TextBlock 
-                Grid.Row="4"
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                Text="Default integration" />
-            <ninactrl:UnitTextBox
-                Grid.Row="4"
-                Grid.Column="1"
-                Margin="10,5,0,0"
-                HorizontalAlignment="Left"
-                Text="{Binding ExpectedIntegrationTime}"
-                ToolTip="If NEO's speed allow us, we will use this time when programming the &quot;Loop For Time Span&quot; inside the template"
-                Unit="min"/>
-                
             <TextBlock 
                 Grid.Row="5"
                 Grid.Column="0"

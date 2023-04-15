@@ -73,18 +73,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("90")]
-        public int ExpectedIntegrationTime {
-            get {
-                return ((int)(this["ExpectedIntegrationTime"]));
-            }
-            set {
-                this["ExpectedIntegrationTime"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("180")]
         public int MaxExposureTime {
             get {

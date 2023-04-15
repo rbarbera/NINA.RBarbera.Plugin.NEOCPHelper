@@ -308,10 +308,9 @@
                                         <DataGridTextColumn Header=" &quot;/min " Binding="{Binding totalSpeed, StringFormat=\{0\,4:f3\}}" />
                                         <DataGridTextColumn Header=" NObs " Binding="{Binding NObs}" />
                                         <DataGridTextColumn Header=" Arc " Binding="{Binding Arc}" />
-                                        <DataGridTextColumn Header=" Days " Binding="{Binding NotSeenIn}" />
+                                        <DataGridTextColumn Header=" Not Seen in/Days " Binding="{Binding NotSeenIn}" />
                                         <DataGridTextColumn Header=" H " Binding="{Binding H, StringFormat=\{0:f1\}}" />
                                         <DataGridTextColumn Header=" Exp. Max (s) " Binding="{Binding ExpMax}" />
-                                        <DataGridTextColumn Header=" T. Max (min) " Binding="{Binding TMax}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Button 

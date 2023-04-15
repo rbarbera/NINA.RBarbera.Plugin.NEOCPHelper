@@ -76,27 +76,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
             }
         }
 
-        public int ExpectedIntegrationTime {
-            get {
-                return Settings.Default.ExpectedIntegrationTime;
-            }
-            set {
-                Settings.Default.ExpectedIntegrationTime = value;
-                CoreUtil.SaveSettings(Settings.Default);
-                RaisePropertyChanged();
-            }
-        }
-
-        public int MaxExposureTime {
-            get {
-                return Settings.Default.MaxExposureTime;
-            }
-            set {
-                Settings.Default.MaxExposureTime = value;
-                CoreUtil.SaveSettings(Settings.Default);
-                RaisePropertyChanged();
-            }
-        }
 
         public string SelectedTemplate {
             get {
