@@ -153,7 +153,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
         private NEOCPTarget _SelectedNEO;
 
-        [JsonProperty]
         public NEOCPTarget SelectedNEO {
             get {
                 return _SelectedNEO;
@@ -168,7 +167,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
         private NEOCPDeepSkyObject _neocpDSO;
 
-        [JsonProperty]
         public NEOCPDeepSkyObject NEOCPDSO {
             get {
                 return _neocpDSO;

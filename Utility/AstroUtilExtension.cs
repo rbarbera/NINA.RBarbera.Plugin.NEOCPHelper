@@ -21,6 +21,19 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         public DateTime EndTime { get; set; }
     }
     public static class AstroUtilExtension {
+
+        public static double ReducedRADegrees(double raDegrees) {
+            while (raDegrees > 360) raDegrees -= 360;
+            while (raDegrees < 0) raDegrees += 360;
+            return raDegrees;
+        }
+
+        public static double ReducedDecDegrees(double decDegrees) {
+            while (decDegrees > 90) decDegrees -= 90;
+            while (decDegrees < -90) decDegrees += 90;
+            return decDegrees;
+        }
+
         public static DateTime GetNextSetTime(IAstrometrySettings astrometrySettings, Coordinates coords, DateTime startTime) {
             var horizon = astrometrySettings.Horizon;
             var start = startTime;

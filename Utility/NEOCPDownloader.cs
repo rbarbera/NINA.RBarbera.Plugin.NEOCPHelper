@@ -15,7 +15,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             var neos = GetNEOCP();
             var ephemerides = GetEphemerides(astrometrySettings);
 
-            neos.ForEach(e => { e.Ephemerides = ephemerides[e.Designation]; } );
+            neos.ForEach(e => { 
+                if(ephemerides.ContainsKey(e.Designation)) 
+                    e.Ephemerides = ephemerides[e.Designation]; 
+            });
             return neos;
         }
 

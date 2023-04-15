@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers"
     xmlns:models="clr-namespace:NINA.RBarbera.Plugin.NeocpHelper.Models"
+    xmlns:neoutils="clr-namespace:NINA.RBarbera.Plugin.NeocpHelper.Utility"
     xmlns:mini="clr-namespace:NINA.View.Sequencer.MiniSequencer;assembly=NINA.Sequencer"
     xmlns:nina="clr-namespace:NINA.View.Sequencer;assembly=NINA.Sequencer"
     xmlns:behaviors="clr-namespace:NINA.Sequencer.Behaviors;assembly=NINA.Sequencer"
@@ -236,8 +237,8 @@
                         <Grid>
                             <Grid.Resources>
                                 <util:BindingProxy x:Key="nighttimeProxy" Data="{Binding NighttimeData}" />
-                                <models:RAConverter x:Key="RAConverter"/>
-                                <models:DecConverter x:Key="DecConverter"/>
+                                <neoutils:RAConverter x:Key="RAConverter"/>
+                                <neoutils:DecConverter x:Key="DecConverter"/>
                             </Grid.Resources>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />

@@ -78,9 +78,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
             return new UpdateNEOEphemerides(this);
         }
 
+        [JsonProperty]
         public int MaxTrackLenght { get => _maxTrackLenght; set => _maxTrackLenght = value; }
+        [JsonProperty]
         public int MaxExposure { get => _maxExposure; set => _maxExposure = value; }
+        [JsonProperty] 
         public int IntegrationTime { get => _integrationTime; set => _integrationTime = value; }
+        [JsonProperty]
         public double SensorAreaUsage {
             get => _sensorAreaUsage;
             set {
@@ -109,24 +113,20 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
 
                         var cameraInfo = cameraMediator.GetInfo();
                         var cameraSize = Math.Min(cameraInfo.XSize, cameraInfo.YSize) * SensorAreaUsage;
-
-
                         var pixelSize = cameraInfo.PixelSize;
                         var focalLength = profileService.ActiveProfile.TelescopeSettings.FocalLength;
                         var scale = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(2 * Math.Atan2(pixelSize / 2000, focalLength)));
-                        var fieldSize = (int)Math.Floor(AstroUtil.ArcsecToArcmin(cameraSize * scale));
+                        var fieldSize = AstroUtil.ArcsecToArcmin(cameraSize * scale);
 
-                        var firstEphemeride = ephemerides.First().Value.First();
-                        firstEphemeride.SetScales(scale, MaxTrackLenght, fieldSize);
+                        var newEphemerides = ephemerides.First().Value.First();
+                        newEphemerides.SetScales(pixelSize, MaxTrackLenght, fieldSize);
 
-                        var newEphemerides = firstEphemeride.Coordinates;
-                        var newExposure = Math.Min(firstEphemeride.ExpMax, MaxExposure);
-                        var newIntegrationTime = Math.Min(firstEphemeride.TMax, IntegrationTime);
+                        var field = newEphemerides.Field(fieldSize);
+                        var newExposure = Math.Min(newEphemerides.ExpMax, MaxExposure);
 
-                        ItemUtility.UpdateDSOContainerCoordinates(container, newEphemerides);
+                        ItemUtility.UpdateDSOContainerCoordinates(container, field.Center);
                         ItemUtility.UpdateTakeExposureItems(container, newExposure);
-                        ItemUtility.UpdateTimeSpanItems(container, DateTime.Now.AddMinutes(newIntegrationTime));
-
+                        ItemUtility.UpdateTimeSpanItems(container, DateTime.Now + field.Duration);
                     } catch (Exception ex) {
                         var error = String.Format("Ephemerides not found for {0}", targetName);
                         Issues.Add(error);

@@ -1,4 +1,5 @@
 ﻿using NINA.Astrometry;
+using NINA.RBarbera.Plugin.NeocpHelper.Utility;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,28 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
-
-    public class RAConverter : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
-            double input = (double)value;
-            return AstroUtil.DegreesToHMS(input);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
-            throw new NotSupportedException();
-        }
-    }
-
-    public class DecConverter : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
-            double input = (double)value;
-            return AstroUtil.DegreesToDMS(input);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
-            throw new NotSupportedException();
-        }
-    }
 
     internal class NEOCPEphemerides {
 
@@ -44,6 +23,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
     {
         public NEOCPEphemeride(string s) 
         {
+            if (s == null) return;
+
             this.DateTime = DateTime.ParseExact(s.Substring(0, 15),"yyyy MM dd HHmm",null);
             this.RA = AstroUtil.HMSToDegrees(s.Substring(18, 8));
             this.Dec = AstroUtil.DMSToDegrees(s.Substring(28, 8));
@@ -68,16 +49,20 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
         public int ExpMax { get; internal set; }
         public int TMax { get; internal set; }
 
-        public void SetScales(double pixelScale, int spotSize, int usedFieldArcmin) {
+        public void SetScales(double pixelScale, int spotSize, double usedFieldArcmin) {
             var ppMin = this.totalSpeed / pixelScale;
             this.ExpMax = (int)Math.Ceiling(spotSize * 60 / ppMin);
             this.TMax = (int)Math.Ceiling(usedFieldArcmin * 60 / totalSpeed);
         }
 
-        public double MaxExposure(double pixelScale, int spotSize) {
-            var speed = Math.Max(Math.Abs(speedRA), Math.Abs(speedDec));
-            return (pixelScale * spotSize) / speed * 60.0;
+        public NEOCPField Field(double fieldDiameter) {
+            var timeSpan = AstroUtil.ArcminToArcsec(fieldDiameter) / totalSpeed;
+            var centerRA = Angle.ByDegree(AstroUtilExtension.ReducedRADegrees(RA + AstroUtil.ArcsecToDegree(timeSpan * speedRA) / 2.0));
+            var centerDec = Angle.ByDegree(AstroUtilExtension.ReducedDecDegrees(Dec + AstroUtil.ArcsecToDegree(timeSpan * speedDec) / 2.0));
+
+            return new NEOCPField(new Coordinates(centerRA, centerDec, Epoch.J2000), TimeSpan.FromMinutes(timeSpan));
         }
+
         public Coordinates Coordinates {
             get {
                 return new Coordinates(Angle.ByDegree(RA), Angle.ByDegree(Dec), Epoch.J2000);

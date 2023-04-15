@@ -12,6 +12,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
     {
         public NEOCPTarget(string neocpline) 
         {
+            if (neocpline == null) return;
+
             this.Designation = neocpline.Substring(0, 7);
             this.Score = Int32.Parse(neocpline.Substring(8, 3));
             this.Discovery = neocpline.Substring(12, 12);
@@ -61,7 +63,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
         public int TMax { get; internal set; }
 
         public void SetScales(double pixelScale, int spotSize, int usedFieldArcmin) {
-            if (Ephemerides.Count == 0)
+            if (Ephemerides == null || Ephemerides.Count == 0)
                 return;
 
             var first = Ephemerides[0];
@@ -70,40 +72,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
             this.ExpMax = first.ExpMax;
         }
 
-        public List<NEOCPField> ComputeFields(DateTime startTime, DateTime endTime, double XSize, double YSize) {
-            var raSpan = Math.Abs(XSize / speedRA);
-            var decSpan = Math.Abs(YSize / speedDec);
-            var span = Math.Min(raSpan, decSpan);
-            System.Diagnostics.Debug.WriteLine("{0}", span);
-
-            var initialTime = startTime;
-            var eph = Ephemerides.First();
-            var startRA = eph.RA;
-            var startDec = eph.Dec;
-
-
-            var fields = new List<NEOCPField>();
-            do {
-                var computedEnd = initialTime.AddMinutes(span);
-                var finalTime = new DateTime(Math.Min(endTime.Ticks, computedEnd.Ticks));
-                var realSpan = finalTime - initialTime;
-                var endRA = startRA + (realSpan.TotalMinutes * speedRA)/3600.0;
-                var endDec = startDec + (realSpan.TotalMinutes * speedDec)/3600.0;
-
-                var midRA = (endRA + startRA) / 2.0;
-                var midDec = (endDec + startDec) / 2.0;
-                var newField = new NEOCPField(initialTime, finalTime, new Coordinates(midRA, midDec, Epoch.J2000, Astrometry.Coordinates.RAType.Degrees));
-
-                fields.Add(newField);
-                if (finalTime.Ticks >= endTime.Ticks)
-                    break;
-                startRA = endRA;
-                startDec = endDec;
-                initialTime = finalTime;
-            } while (true);
-
-            return fields;
-        }
         public Coordinates Coordinates() {
             return new Coordinates(Angle.ByDegree(RA), Angle.ByDegree(Dec), Epoch.J2000);
         }

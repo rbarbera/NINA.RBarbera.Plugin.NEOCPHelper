@@ -278,6 +278,7 @@
       <DependentUpon>Datatemplate.xaml</DependentUpon>
     </Compile>
     <Compile Include="Sequencer\Instructions\UpdateNEOEphemerides.cs" />
+    <Compile Include="Utility\Converters.cs" />
     <Compile Include="Utility\ItemUtil.cs" />
     <Compile Include="Utility\NEOCPScanner.cs" />
     <Compile Include="Models\NEOCPInputTarget.cs" />
