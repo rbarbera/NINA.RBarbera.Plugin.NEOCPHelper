@@ -76,7 +76,7 @@
                 <Slider 
                     VerticalAlignment="Center"
                     IsSnapToTickEnabled="True"
-                    Maximum="0.95"
+                    Maximum="1.20"
                     Minimum="0.05"
                     TickFrequency="0.05"
                     ToolTip="Percentaje of the dimensions of the sensor used to compute the maximum integration time"
