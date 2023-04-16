@@ -54,12 +54,12 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
             }
         }
 
-        public int UsedField {
+        public bool AutoExpandTemplates {
             get {
-                return Settings.Default.UsedField;
+                return Settings.Default.AutoExpandTemplates;
             }
             set {
-                Settings.Default.UsedField = value;
+                Settings.Default.AutoExpandTemplates = value;
                 CoreUtil.SaveSettings(Settings.Default);
                 RaisePropertyChanged();
             }

@@ -49,18 +49,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("41")]
-        public int UsedField {
-            get {
-                return ((int)(this["UsedField"]));
-            }
-            set {
-                this["UsedField"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SelectedTemplate {
             get {
@@ -68,18 +56,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
             }
             set {
                 this["SelectedTemplate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("180")]
-        public int MaxExposureTime {
-            get {
-                return ((int)(this["MaxExposureTime"]));
-            }
-            set {
-                this["MaxExposureTime"] = value;
             }
         }
         
@@ -116,6 +92,18 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
             }
             set {
                 this["SensorAreaUsage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoExpandTemplates {
+            get {
+                return ((bool)(this["AutoExpandTemplates"]));
+            }
+            set {
+                this["AutoExpandTemplates"] = value;
             }
         }
     }

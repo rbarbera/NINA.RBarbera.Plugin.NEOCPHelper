@@ -8,14 +8,8 @@
     <Setting Name="MaxLength" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">6</Value>
     </Setting>
-    <Setting Name="UsedField" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">41</Value>
-    </Setting>
     <Setting Name="SelectedTemplate" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="MaxExposureTime" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">180</Value>
     </Setting>
     <Setting Name="TargetPrefix" Type="System.String" Scope="User">
       <Value Profile="(Default)">NEO_</Value>
@@ -25,6 +19,9 @@
     </Setting>
     <Setting Name="SensorAreaUsage" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.8</Value>
+    </Setting>
+    <Setting Name="AutoExpandTemplates" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

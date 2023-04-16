@@ -205,6 +205,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                     Rotation = 0
                 };
                 fieldContainer.Name = neocpHelper.TargetPrefix + SelectedNEO.Designation;
+                fieldContainer.IsExpanded = neocpHelper.AutoExpandTemplates;
                     
                 _ = _dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
                     lock (Items) {

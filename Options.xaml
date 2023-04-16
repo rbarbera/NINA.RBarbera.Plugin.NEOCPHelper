@@ -38,12 +38,12 @@
                 Unit="px" />
            
             <TextBlock 
-                Grid.Row="3"
+                Grid.Row="1"
                 Grid.Column="0"
                 Text="Sensor area used"
                 VerticalAlignment="Center" />
             <StackPanel
-                Grid.Row="3"
+                Grid.Row="1"
                 Grid.Column="1"
                 Margin="10,0,0,0"
                 Orientation="Horizontal"
@@ -64,12 +64,12 @@
             </StackPanel>
 
             <TextBlock 
-                Grid.Row="5"
+                Grid.Row="2"
                 Grid.Column="0"
                 VerticalAlignment="Center"
                 Text="Force skip on failure" />
             <CheckBox
-                Grid.Row="5"
+                Grid.Row="2"
                 Grid.Column="1"
                 MinWidth="80"
                 HorizontalAlignment="Left"
@@ -77,6 +77,21 @@
                 Margin="0,5,0,0"
                 ToolTip="When the UpdateNEOEphemerides fails, it's not safe to keep with the old data. You can force this &quot;skip on failure&quot; to avoid wasting observation time."
                 IsChecked="{Binding ForceSkipOnFailure}" />
+            <TextBlock 
+                Grid.Row="3"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Text="Expand inserted templates" />
+            <CheckBox
+                Grid.Row="3"
+                Grid.Column="1"
+                MinWidth="80"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Margin="0,5,0,0"
+                ToolTip="Control if new templates inserted on the sequencer are shown expanded or colapsed."
+                IsChecked="{Binding AutoExpandTemplates}" />
+            
             <TextBlock 
                 Grid.Row="6"
                 Grid.Column="0"

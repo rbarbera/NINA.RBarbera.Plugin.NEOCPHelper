@@ -9,6 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
     internal class NEOCPDownloader {
         public static List<NEOCPTarget> Get(IAstrometrySettings astrometrySettings) {
@@ -40,13 +41,33 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             return list;
         }
 
+
+        private static string QueryString(IAstrometrySettings astrometrySettings) {
+            var strLong = String.Format("{0:f2} {1}", 
+                Math.Abs(astrometrySettings.Longitude),(astrometrySettings.Longitude > 0) ? "e" : "w");
+            var strLat = String.Format("{0:f2}d", astrometrySettings.Latitude);
+            
+
+            return String.Format("Parallax=0&long={0}&lat={1}&alt={2}&int=1&raty=h&mot=m&dmot=r&out=f&sun=a", strLong, strLat, astrometrySettings.Elevation);
+        }
+
+        private static string FilterTargets(IAstrometrySettings astrometrySettings) {
+            
+            var minDec = astrometrySettings.Latitude > 0 ? astrometrySettings.Latitude - 90 : -90;
+            var maxDec = astrometrySettings.Latitude > 0 ? 90 : 90 + astrometrySettings.Latitude;
+
+            var AllObjects = "W=a";
+            var filterDec = String.Format("dl={0}&du={1}", minDec, maxDec);
+            var filterV = String.Format("mb={0}&mf={1}", -30, 30);
+            var filterScore = String.Format("nl={0}&nu={1}", 0, 100);
+
+            return String.Format("{0}&{1}&{2}", filterV, filterDec, filterScore);
+        }
+
         private static Dictionary<string, List<NEOCPEphemeride>> GetEphemerides(IAstrometrySettings astrometrySettings) {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
-
-            var strLong = String.Format("{0:f2} {1}", Math.Abs(astrometrySettings.Longitude), (astrometrySettings.Longitude > 0) ? "e" : "w");
-            var strLat = String.Format("{0:f2}d", astrometrySettings.Latitude);
-            var postData = String.Format("Parallax=0&long={0}&lat={1}&alt={2}&int=1&raty=h&mot=m&dmot=r&out=f&sun=a&W=a",strLong, strLat, astrometrySettings.Elevation);
-            var data = Encoding.ASCII.GetBytes(postData);
+            var query = QueryString(astrometrySettings) + "&" + FilterTargets(astrometrySettings);
+            var data = Encoding.ASCII.GetBytes(query);
 
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
@@ -68,10 +89,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         public static Dictionary<string, List<NEOCPEphemeride>> GetEphemerides(string obj, IAstrometrySettings astrometrySettings) {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
 
-            var strLong = String.Format("{0:f2} {1}", Math.Abs(astrometrySettings.Longitude), (astrometrySettings.Longitude > 0) ? "e" : "w");
-            var strLat = String.Format("{0:f2}d", astrometrySettings.Latitude);
-            var postData = String.Format("Parallax=0&long={0}&lat={1}&alt={2}&int=1&raty=h&mot=m&dmot=r&out=f&sun=a&W=j&obj={3}", strLong, strLat, astrometrySettings.Elevation,obj);
-            var data = Encoding.ASCII.GetBytes(postData);
+            var query = QueryString(astrometrySettings) + String.Format("&obj={0}", obj);
+            var data = Encoding.ASCII.GetBytes(query);
 
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
