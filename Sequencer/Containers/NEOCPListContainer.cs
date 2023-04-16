@@ -269,6 +269,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             });
         }
 
+
         private AsyncObservableCollection<NEOCPTarget> getNEOCPList() {
             var pixelSize = profileService.ActiveProfile.CameraSettings.PixelSize;
             var focalLength = profileService.ActiveProfile.TelescopeSettings.FocalLength;
