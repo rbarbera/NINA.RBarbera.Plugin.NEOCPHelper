@@ -200,7 +200,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                 DeepSkyObjectContainer fieldContainer = (DeepSkyObjectContainer)myTemplate.Clone();
                 fieldContainer.Target = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon) 
                 {
-                    TargetName = SelectedNEO.Designation,
+                    TargetName = neocpHelper.TargetPrefix + SelectedNEO.Designation,
                     InputCoordinates = new InputCoordinates() { Coordinates = SelectedNEO.Coordinates() },
                     Rotation = 0
                 };

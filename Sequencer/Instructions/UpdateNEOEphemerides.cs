@@ -94,6 +94,9 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                         this.ErrorBehavior = NINA.Sequencer.Utility.InstructionErrorBehavior.SkipInstructionSetOnError;
                     }
                     var targetName = container.Target.TargetName;
+                    if (targetName.StartsWith(neocpHelper.TargetPrefix)) {
+                        targetName = targetName.Substring(neocpHelper.TargetPrefix.Length);
+                    }
                     progress.Report(new ApplicationStatus() { Status = String.Format("Retrieving {0} ephemerides", targetName) });
                     try {
                         var ephemerides = NEOCPDownloader.GetEphemerides(targetName, profileService.ActiveProfile.AstrometrySettings);

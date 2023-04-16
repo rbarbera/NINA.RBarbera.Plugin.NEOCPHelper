@@ -51,7 +51,7 @@
         <Slider 
             VerticalAlignment="Center"
             IsSnapToTickEnabled="True"
-            Maximum="0.95"
+            Maximum="1.20"
             Minimum="0.05"
             TickFrequency="0.05"
             Value="{Binding SensorAreaUsage, UpdateSourceTrigger=PropertyChanged}" />
