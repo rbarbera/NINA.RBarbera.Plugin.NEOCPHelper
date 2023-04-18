@@ -115,7 +115,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                         var fieldSize = AstroUtil.ArcsecToArcmin(cameraSize * scale);
 
                         var newEphemerides = ephemerides.First().Value.First();
-                        newEphemerides.SetScales(pixelSize, MaxTrackLenght);
+                        newEphemerides.SetScales(scale, MaxTrackLenght);
 
                         var field = newEphemerides.Field(fieldSize);
 

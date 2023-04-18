@@ -69,6 +69,12 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             return String.Format("{0}&{1}&{2}", filterV, filterDec, filterScore);
         }
 
+        private static string FilterTarget(string targetName) {
+            var SelectedObject = "W=j";
+            var objectByName = String.Format("obj={0}", targetName);
+            return String.Format("{0}&{1}",SelectedObject, objectByName);
+        }
+
         private static Dictionary<string, List<NEOCPEphemeride>> GetEphemerides(IAstrometrySettings astrometrySettings) {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
             var query = QueryString(astrometrySettings) + "&" + FilterTargets(astrometrySettings);
@@ -94,7 +100,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         public static Dictionary<string, List<NEOCPEphemeride>> GetEphemerides(string obj, IAstrometrySettings astrometrySettings) {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
 
-            var query = QueryString(astrometrySettings) + String.Format("&obj={0}", obj);
+            var query = QueryString(astrometrySettings) + "&" + FilterTarget(obj);
             var data = Encoding.ASCII.GetBytes(query);
 
             request.Method = "POST";
