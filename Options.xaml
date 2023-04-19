@@ -111,7 +111,7 @@
                     VerticalAlignment="Center"
                     Text=" and " />
                 <ninactrl:UnitTextBox 
-                    Margin="10,5,0,0"
+                    Margin="0,5,0,0"
                     HorizontalAlignment="Left"
                     Text="{Binding MagFaint}"
                     Unit="mag" />
@@ -136,7 +136,7 @@
                     VerticalAlignment="Center"
                     Text=" and " />
                 <ninactrl:UnitTextBox 
-                    Margin="10,5,0,0"
+                    Margin="0,5,0,0"
                     HorizontalAlignment="Left"
                     Text="{Binding DecLow}"
                     Unit="deg" />
@@ -161,7 +161,7 @@
                     VerticalAlignment="Center"
                     Text=" and " />
                 <ninactrl:UnitTextBox 
-                    Margin="10,5,0,0"
+                    Margin="0,5,0,0"
                     HorizontalAlignment="Left"
                     Text="{Binding ScoreHigh}"
                     Unit="%" />
