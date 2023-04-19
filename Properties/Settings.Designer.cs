@@ -106,5 +106,77 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Properties {
                 this["AutoExpandTemplates"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-30")]
+        public double MagBright {
+            get {
+                return ((double)(this["MagBright"]));
+            }
+            set {
+                this["MagBright"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public double MagFaint {
+            get {
+                return ((double)(this["MagFaint"]));
+            }
+            set {
+                this["MagFaint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-90")]
+        public double DecLow {
+            get {
+                return ((double)(this["DecLow"]));
+            }
+            set {
+                this["DecLow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("90")]
+        public double DecUp {
+            get {
+                return ((double)(this["DecUp"]));
+            }
+            set {
+                this["DecUp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double ScoreLow {
+            get {
+                return ((double)(this["ScoreLow"]));
+            }
+            set {
+                this["ScoreLow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public double ScoreHigh {
+            get {
+                return ((double)(this["ScoreHigh"]));
+            }
+            set {
+                this["ScoreHigh"] = value;
+            }
+        }
     }
 }

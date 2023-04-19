@@ -42,7 +42,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyMetadata("Tags", "neo")]
 
 //[Optional] The url to a featured logo that will be displayed in the plugin list next to the name
-[assembly: AssemblyMetadata("FeaturedImageURL", "https://github.com/rbarbera/NINA.RBarbera.Plugin.NEOCPHelper/releases/download/static/impactor-svg.jpg")]
+[assembly: AssemblyMetadata("FeaturedImageURL", "https://rbarbera.github.io/impactor-svg.png")]
 //[Optional] A url to an example screenshot of your plugin in action
 [assembly: AssemblyMetadata("ScreenshotURL", "")]
 //[Optional] An additional url to an example example screenshot of your plugin in action

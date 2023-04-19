@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Settings = NINA.RBarbera.Plugin.NeocpHelper.Properties.Settings;
 using System.Threading;
 using NINA.Sequencer.Interfaces.Mediator;
+using System.Reflection;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper {
     /// <summary>
@@ -76,6 +77,71 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
             }
         }
 
+        public double MagBright {
+            get {
+                return Settings.Default.MagBright;
+            }
+            set {
+                Settings.Default.MagBright = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double MagFaint {
+            get {
+                return Settings.Default.MagFaint;
+            }
+            set {
+                Settings.Default.MagFaint = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double DecLow {
+            get {
+                return Settings.Default.DecLow;
+            }
+            set {
+                Settings.Default.DecLow = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double DecUp {
+            get {
+                return Settings.Default.DecUp;
+            }
+            set {
+                Settings.Default.DecUp = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double ScoreHigh {
+            get {
+                return Settings.Default.ScoreHigh;
+            }
+            set {
+                Settings.Default.ScoreHigh = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
+        public double ScoreLow {
+            get {
+                return Settings.Default.ScoreLow;
+            }
+            set {
+                Settings.Default.ScoreLow = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
 
         public string SelectedTemplate {
             get {
@@ -107,6 +173,16 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
                 Settings.Default.TargetPrefix = value;
                 CoreUtil.SaveSettings(Settings.Default);
                 RaisePropertyChanged();
+            }
+        }
+
+        public string FilterString {
+            get {
+                var filterDec = String.Format("dl={0}&du={1}", DecLow, DecUp);
+                var filterV = String.Format("mb={0}&mf={1}", MagBright, MagFaint);
+                var filterScore = String.Format("nl={0}&nu={1}", ScoreLow, ScoreHigh);
+
+                return String.Format("{0}&{1}&{2}",filterV, filterDec,filterScore);
             }
         }
 
