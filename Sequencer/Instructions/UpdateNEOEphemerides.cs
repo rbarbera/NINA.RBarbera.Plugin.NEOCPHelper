@@ -30,6 +30,7 @@ using System.Diagnostics;
 using NINA.Core.Utility;
 using NINA.Astrometry;
 using NINA.Sequencer.SequenceItem.Camera;
+using NINA.RBarbera.Plugin.NeocpHelper.Models;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
 
@@ -106,6 +107,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                             Logger.Error(error);
                             throw new SequenceEntityFailedException(string.Join(",", Issues));
                         }
+                        var neo = new NEOCPTarget(ephemerides.First().Value);
 
                         var cameraInfo = cameraMediator.GetInfo();
                         var cameraSize = Math.Min(cameraInfo.XSize, cameraInfo.YSize) * SensorAreaUsage;
@@ -114,14 +116,22 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                         var scale = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(2 * Math.Atan2(pixelSize / 2000, focalLength)));
                         var fieldSize = AstroUtil.ArcsecToArcmin(cameraSize * scale);
 
-                        var newEphemerides = ephemerides.First().Value.First();
-                        newEphemerides.SetScales(scale, MaxTrackLenght);
+                        neo.SetScales(scale, MaxTrackLenght);
+                        var initial = neo.InterpolatedAtTime(DateTime.Now.ToUniversalTime());
+                        var final = neo.InterpolatedAtDistance(initial, fieldSize);
+                        var maxSpan = final.DateTime - initial.DateTime;
+                        var usedTimeSpan = ItemUtility.UpdateTimeSpanItems(container, maxSpan);
 
-                        var field = newEphemerides.Field(fieldSize);
+                        if (usedTimeSpan != maxSpan) {
+                            final = neo.InterpolatedAtTime(initial.DateTime + usedTimeSpan);
+                        }
 
-                        ItemUtility.UpdateDSOContainerCoordinates(container, field.Center);
-                        ItemUtility.UpdateTakeExposureItems(container, newEphemerides.ExpMax);
-                        ItemUtility.UpdateTimeSpanItems(container, field.Duration);
+                        var center = NEOCPEphemeride.MidPoint(initial, final);
+                        center.SetScales(scale, MaxTrackLenght);
+
+                        ItemUtility.UpdateDSOContainerCoordinates(container,center.Coordinates);
+                        ItemUtility.UpdateTakeExposureItems(container, center.ExpMax);
+                        
                     } catch (Exception ex) {
                         var error = String.Format("Ephemerides not found for {0}", targetName);
                         Issues.Add(error);

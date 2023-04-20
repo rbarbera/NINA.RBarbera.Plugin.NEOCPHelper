@@ -53,7 +53,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             var strLat = String.Format("{0:f2}d", astrometrySettings.Latitude);
             
 
-            return String.Format("Parallax=0&long={0}&lat={1}&alt={2}&int=1&raty=h&mot=m&dmot=r&out=f&sun=a", strLong, strLat, astrometrySettings.Elevation);
+            return String.Format("Parallax=2&long={0}&lat={1}&alt={2}&int=1&raty=h&mot=m&dmot=r&out=f&sun=x&oalt=20", strLong, strLat, astrometrySettings.Elevation);
         }
 
 

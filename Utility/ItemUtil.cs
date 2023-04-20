@@ -27,29 +27,33 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             }
         }
 
-        public static void UpdateTimeSpanItems(ISequenceContainer parent, TimeSpan span) {
+        public static TimeSpan UpdateTimeSpanItems(ISequenceContainer parent, TimeSpan span) {
             if (parent == null)
-                return;
+                return TimeSpan.Zero;
 
             if (parent is SequentialContainer container) {
                 foreach (var condition in container.Conditions) {
-
                     if (condition is TimeSpanCondition timeSpanCondition) {
                         if (span.Ticks < timeSpanCondition.RemainingTime.Ticks) {
                             timeSpanCondition.Hours = span.Hours;
                             timeSpanCondition.Minutes = span.Minutes;
                             timeSpanCondition.Seconds = span.Seconds;
-                            continue;
+                            return span;
+                        } 
+                        else {
+                            return timeSpanCondition.RemainingTime;
                         }
                     }
                 }
+                return TimeSpan.Zero;
             } else {
                 var items = parent.GetItemsSnapshot();
                 foreach (var item in items) {
                     if (item is ISequenceContainer innerContainer) {
-                        UpdateTimeSpanItems(innerContainer, span);
+                        return UpdateTimeSpanItems(innerContainer, span);
                     }
                 }
+                return TimeSpan.Zero;
             }
         }
 

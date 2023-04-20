@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static NINA.Image.FileFormat.XISF.XISFImageProperty.Observation;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
 
@@ -21,6 +22,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         public DateTime EndTime { get; set; }
     }
     public static class AstroUtilExtension {
+
+        public static double Fraction(double x, double a, double b) {
+            return (x - a) / (b - a);
+        }
+        public static double Interpolate(double a, double b, double frac) {
+            return a + (b - a) * frac;
+        }
 
         public static double ReducedRADegrees(double raDegrees) {
             while (raDegrees > 360) raDegrees -= 360;

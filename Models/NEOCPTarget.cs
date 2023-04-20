@@ -1,10 +1,12 @@
 ﻿using Accord.Diagnostics;
 using NINA.Astrometry;
+using NINA.RBarbera.Plugin.NeocpHelper.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Models
 {
@@ -24,6 +26,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
             this.Arc = Double.Parse(neocpline.Substring(83, 6));
             this.H = Double.Parse(neocpline.Substring(90, 4));
             this.NotSeenIn = Double.Parse(neocpline.Substring(95));
+        }
+
+        public NEOCPTarget(List<NEOCPEphemeride> ephemerides) {
+            this.Ephemerides = ephemerides;
         }
 
 
@@ -73,5 +79,46 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
             return new Coordinates(Angle.ByDegree(RA), Angle.ByDegree(Dec), Epoch.J2000);
         }
 
+        public NEOCPEphemeride InterpolatedAtTime(DateTime atTime) {
+            var aIndex = Ephemerides.FindLastIndex(ep => { return ep.DateTime.Ticks <= atTime.Ticks; });
+            if (aIndex < 1)
+                return Ephemerides.First();
+
+            var bIndex = Math.Min(aIndex + 1, Ephemerides.Count - 1);
+
+            var a = Ephemerides[aIndex];
+            var b = Ephemerides[bIndex];
+
+            var frac = AstroUtilExtension.Fraction(atTime.Ticks, a.DateTime.Ticks, b.DateTime.Ticks);
+            var cRA = AstroUtilExtension.Interpolate(a.RA, b.RA, frac);
+            var cDec = AstroUtilExtension.Interpolate(a.Dec, b.Dec, frac);
+            var cV = AstroUtilExtension.Interpolate(a.V, b.V, frac);
+            var cSRA = AstroUtilExtension.Interpolate(a.speedRA, b.speedRA, frac);
+            var cSDec = AstroUtilExtension.Interpolate(a.speedDec, b.speedDec, frac);
+            var cEMax = (int)AstroUtilExtension.Interpolate(a.ExpMax, b.ExpMax, frac);
+
+            var c = new NEOCPEphemeride(atTime,cRA,cDec,cV,cSRA,cSDec, cEMax);
+
+            return c;
+        }
+
+        public NEOCPEphemeride LastInField(NEOCPEphemeride center, double fieldInArcMin) {
+            var aIndex = Ephemerides.FindIndex(ep => { return ep.DateTime.Ticks > center.DateTime.Ticks; });
+            var rest = Ephemerides.Skip(aIndex).ToList();
+            if (AstroUtil.DegreeToArcmin(rest[0].Distance(center)) > fieldInArcMin)
+                return rest[0];
+            foreach(var item in rest) {
+                Debugger.Log(0, "interpolation", String.Format("{0:f3} {1:f3} {2}\n", item.RA, item.Dec, item.Distance(center)));
+            }
+            var bIndex = rest.FindLastIndex(ep => { return AstroUtil.DegreeToArcmin(ep.Distance(center)) <= fieldInArcMin; });
+            return (bIndex >= 0) ? rest[bIndex] : rest.Last();
+        }
+
+        public NEOCPEphemeride InterpolatedAtDistance(NEOCPEphemeride start, double fieldInArcMin) {
+            var d = this.LastInField(start, fieldInArcMin);
+            var remainingField = fieldInArcMin - AstroUtil.DegreeToArcmin(d.Distance(start));
+            var remainingTime = AstroUtil.ArcminToArcsec(remainingField) / d.totalSpeed;
+            return this.InterpolatedAtTime(d.DateTime.AddMinutes(remainingTime));
+        }
     }
 }
