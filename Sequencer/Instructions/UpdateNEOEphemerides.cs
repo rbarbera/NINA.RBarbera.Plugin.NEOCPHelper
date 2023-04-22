@@ -116,8 +116,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                         var scale = AstroUtil.DegreeToArcsec(AstroUtil.ToDegree(2 * Math.Atan2(pixelSize / 2000, focalLength)));
                         var fieldSize = AstroUtil.ArcsecToArcmin(cameraSize * scale);
 
+                        var obseringTime = DateTime.Now.ToUniversalTime();
+
                         neo.SetScales(scale, MaxTrackLenght);
-                        var initial = neo.InterpolatedAtTime(DateTime.Now.ToUniversalTime());
+                        var initial = neo.InterpolatedAtTime(obseringTime);
                         var final = neo.InterpolatedAtDistance(initial, fieldSize);
                         var maxSpan = final.DateTime - initial.DateTime;
                         var usedTimeSpan = ItemUtility.UpdateTimeSpanItems(container, maxSpan);

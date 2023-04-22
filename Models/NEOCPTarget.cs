@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using TimeInterpolation.MathUtil;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Models
 {
@@ -81,7 +82,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
 
         public NEOCPEphemeride InterpolatedAtTime(DateTime atTime) {
             var aIndex = Ephemerides.FindLastIndex(ep => { return ep.DateTime.Ticks <= atTime.Ticks; });
-            if (aIndex < 1)
+            if (aIndex < 0)
                 return Ephemerides.First();
 
             var bIndex = Math.Min(aIndex + 1, Ephemerides.Count - 1);
@@ -89,13 +90,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
             var a = Ephemerides[aIndex];
             var b = Ephemerides[bIndex];
 
-            var frac = AstroUtilExtension.Fraction(atTime.Ticks, a.DateTime.Ticks, b.DateTime.Ticks);
-            var cRA = AstroUtilExtension.Interpolate(a.RA, b.RA, frac);
-            var cDec = AstroUtilExtension.Interpolate(a.Dec, b.Dec, frac);
-            var cV = AstroUtilExtension.Interpolate(a.V, b.V, frac);
-            var cSRA = AstroUtilExtension.Interpolate(a.speedRA, b.speedRA, frac);
-            var cSDec = AstroUtilExtension.Interpolate(a.speedDec, b.speedDec, frac);
-            var cEMax = (int)AstroUtilExtension.Interpolate(a.ExpMax, b.ExpMax, frac);
+            var frac = MathUtil.Fraction(atTime.Ticks, a.DateTime.Ticks, b.DateTime.Ticks);
+            var cRA = MathUtil.CyclicLERP(a.RA, b.RA, frac);
+            var cDec = MathUtil.LERP(a.Dec, b.Dec, frac);
+            var cV = MathUtil.LERP(a.V, b.V, frac);
+            var cSRA = MathUtil.LERP(a.speedRA, b.speedRA, frac);
+            var cSDec = MathUtil.LERP(a.speedDec, b.speedDec, frac);
+            var cEMax = MathUtil.LERP(a.ExpMax, b.ExpMax, frac);
 
             var c = new NEOCPEphemeride(atTime,cRA,cDec,cV,cSRA,cSDec, cEMax);
 
@@ -107,9 +108,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
             var rest = Ephemerides.Skip(aIndex).ToList();
             if (AstroUtil.DegreeToArcmin(rest[0].Distance(center)) > fieldInArcMin)
                 return rest[0];
-            foreach(var item in rest) {
-                Debugger.Log(0, "interpolation", String.Format("{0:f3} {1:f3} {2}\n", item.RA, item.Dec, item.Distance(center)));
-            }
+
             var bIndex = rest.FindLastIndex(ep => { return AstroUtil.DegreeToArcmin(ep.Distance(center)) <= fieldInArcMin; });
             return (bIndex >= 0) ? rest[bIndex] : rest.Last();
         }

@@ -23,25 +23,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
     }
     public static class AstroUtilExtension {
 
-        public static double Fraction(double x, double a, double b) {
-            return (x - a) / (b - a);
-        }
-        public static double Interpolate(double a, double b, double frac) {
-            return a + (b - a) * frac;
-        }
-
-        public static double ReducedRADegrees(double raDegrees) {
-            while (raDegrees > 360) raDegrees -= 360;
-            while (raDegrees < 0) raDegrees += 360;
-            return raDegrees;
-        }
-
-        public static double ReducedDecDegrees(double decDegrees) {
-            while (decDegrees > 90) decDegrees -= 90;
-            while (decDegrees < -90) decDegrees += 90;
-            return decDegrees;
-        }
-
         public static DateTime GetNextSetTime(IAstrometrySettings astrometrySettings, Coordinates coords, DateTime startTime) {
             var horizon = astrometrySettings.Horizon;
             var start = startTime;

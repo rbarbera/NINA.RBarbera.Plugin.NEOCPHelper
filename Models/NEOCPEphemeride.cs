@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using TimeInterpolation.MathUtil;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
 
@@ -54,14 +55,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
             this.ExpMax = (int)Math.Ceiling(spotSize * 60 / ppMin);
         }
 
-        public NEOCPField Field(double fieldDiameter) {
-            var timeSpan = AstroUtil.ArcminToArcsec(fieldDiameter) / totalSpeed;
-            var centerRA = Angle.ByDegree(AstroUtilExtension.ReducedRADegrees(RA + AstroUtil.ArcsecToDegree(timeSpan * speedRA) / 2.0));
-            var centerDec = Angle.ByDegree(AstroUtilExtension.ReducedDecDegrees(Dec + AstroUtil.ArcsecToDegree(timeSpan * speedDec) / 2.0));
-
-            return new NEOCPField(new Coordinates(centerRA, centerDec, Epoch.J2000), TimeSpan.FromMinutes(timeSpan));
-        }
-
         /* Ψ=arccos(sinθ1sinθ2+cosθ1cosθ2cos(ϕ1−ϕ2)) */
         public double Distance(NEOCPEphemeride other) {
             var raA = Angle.ByDegree(RA);
@@ -74,7 +67,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
 
         public static NEOCPEphemeride MidPoint(NEOCPEphemeride a, NEOCPEphemeride b) {
             return new NEOCPEphemeride(
-                new DateTime((a.DateTime.Ticks + b.DateTime.Ticks) / 2),
+                new DateTime(MathUtil.Mean(a.DateTime.Ticks, b.DateTime.Ticks)),
                 (a.RA + b.RA) / 2,
                 (a.Dec + b.Dec) / 2,
                 (a.V + b.V) / 2,
