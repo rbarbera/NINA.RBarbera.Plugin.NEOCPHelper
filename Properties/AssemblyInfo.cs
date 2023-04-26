@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 // [MANDATORY] The name of your plugin
 [assembly: AssemblyTitle("NEOCP Helper")]
 // [MANDATORY] A short description of your plugin
-[assembly: AssemblyDescription("Download NEOCP data and generate automatically sequences to observe this objects.")]
+[assembly: AssemblyDescription("Download NEOCP data and automatically generate observing sequences for these objects.")]
 
 // The following attributes are not required for the plugin per se, but are required by the official manifest meta data
 
@@ -39,7 +39,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyMetadata("Homepage", "https://github.com/rbarbera/NINA.RBarbera.Plugin.NEOCPHelper")]
 
 //[Optional] Common tags that quickly describe your plugin
-[assembly: AssemblyMetadata("Tags", "NEO, Asteroids, MPC, Minor Planet Center")]
+[assembly: AssemblyMetadata("Tags", "NEO,Asteroids,MPC,Minor Planet Center")]
 
 //[Optional] The url to a featured logo that will be displayed in the plugin list next to the name
 [assembly: AssemblyMetadata("FeaturedImageURL", "https://github.com/rbarbera/NINA.RBarbera.Plugin.NEOCPHelper/releases/download/static/impactor-svg.png")]
@@ -58,14 +58,14 @@ To perform this task, the plugin relies on 4 elements:
 
 - The plugin's configuration options.
 - The NEOCP Object List Container, where initial data for the NEO is obtained, and sessions associated with each object are generated and contained.
-- The ""Update NEO Session"" instruction that reads ephemerides in real-time when executed, calculates the appropriate exposure time, and determines the maximum session duration to keep the asteroid within the sensor range.
+- The ""Update NEO Session"" instruction that reads ephemerides in real-time when executed, calculates the optimal exposure time, and determines the maximum session duration to keep the asteroid within the sensor range.
 - A template for taking photos that the user must adapt to their needs. It should include the ""Update NEO Session"" and ""Take Exposure"" commands and a ""Loop for Time Span"" loop.
 
 ## NEOCP Object List Container
 
 The NEOCP Object List Container is the container for NEO sessions and the place from which NEOs are downloaded and selected. Once downloaded, they appear in a table that can be sorted by any of the columns, and a NEO can be selected to generate a session for photographing it.
 
-The generated session will be contained within the container, facilitating the organization of the different sessions.
+The generated session will be contained within the container, simplifying the organization of the different sessions.
 
 The structure of the observation session for each specific NEO is defined by the template.
 
@@ -80,7 +80,7 @@ To observe each object, the plugin expects the user to have previously defined a
 
 You can download a basic example template for use in NEOCP Helper at [this link](https://github.com/rbarbera/NINA.RBarbera.Plugin.NEOCPHelper/releases/download/static/NEO-basic-session.template.json).
 
-## Operation of the ""Update NEO Session"" instruction
+## Operation of the ""Update NEO Session"" instruction.
 
 What characterizes object observation in the NEOCP is the volatility of the presented data. As different observers obtain new data from these objects, their orbital elements are recalculated and position and velocity predictions vary. Even in some cases, objects are removed from the NEOCP list. This variability means that programming of objects done with several hours difference to the observation time becomes invalidated by the latest data.
 
@@ -88,13 +88,13 @@ NEOCP Helper attempts to solve this problem with the ""Update NEO Session"" inst
 
 Once updated ephemerides are obtained, Update NEO Session calculates:
 
-- The maximum exposure time in each shot to respect the maximum length (in pixels) we want the NEO to leave on the image. For these calculations, the pixel size of the camera, the focal length of the telescope, and the binning configuration in the ""Take Exposure"" instruction contained in the same container are used.
+- The maximum exposure time in each take to respect the maximum length (in pixels) we want the NEO to leave on the image. For these calculations, the pixel size of the camera, the focal length of the telescope, and the binning configuration in the ""Take Exposure"" instruction contained in the same container are used.
 - The maximum total duration of the session to ensure that the NEO will be within the configured sensor fraction.
 - The coordinates of the center of the field containing the entire calculated session.
 
 With this data, the plugin proceeds to modify the template. The container coordinates are updated. As exposure time for each shot, it uses the minimum between the value configured in the template when it is loaded and the one calculated by the plugin for each object. It also searches for the ""Loop Time Span"" in the template and updates it with the minimum of the duration configured in the template or the value calculated for this object.
 
-It is very important to understand that this instruction respects the maximum values of Loop Time Span (session duration) and Exposure (Take Exposure) that exist in the session at the time it is executed. If in the session the duration of the Loop for Time Span is 1 hour, even if the asteroid moves slowly and can be in the field for 2 hours, the session time will remain at 1 hour. If the NEO is very bright and we consider that 30 minutes of exposure will be sufficient, we must put the value of 30 minutes in the Loop for Time Span section. Similarly, for exposure, the plugin will never exceed the value set in the Take Exposure instruction, as it is considered a maximum.
+It is very important to understand that this instruction respects the maximum values of Loop Time Span (session duration) and Exposure (Take Exposure) that exist in the session at the time it is executed. If in the session the duration of the Loop for Time Span is 1 hour, even if the asteroid moves slowly and can be in the field for 2 hours, the session time will remain at 1 hour. If the NEO is very bright and we consider that 30 minutes of exposure will be enough, we must set a value of 30 minutes in the Loop for Time Span section. Similarly, for exposure, the plugin will never exceed the value set in the Take Exposure instruction, as it is considered a maximum value.
 
 ## Configuration Parameters
 
@@ -112,21 +112,22 @@ Regarding the observer's coordinates, to avoid duplications and inconsistencies 
 
 ### Session Characteristics
 
-- **Max Target Trace:** NEOs move across the sensor and often do so quickly. This value is the maximum number of pixels it will move across the sensor regardless of the binning used.
-- **Sensor Area used:** Based on pixel size, focal length, and resolution values, a circle inscribed in that sensor is calculated which corresponds to the value of 100%. This value indicates the area of the sensor that is considered valid. It determines the time the NEO can stay without leaving that area and therefore limits the maximum duration of the session.
+- **Max Target Trace:** NEOs move across the sensor and often do it fast. This value is the maximum number of pixels it will move across the sensor in 1 exposure regardless of the binning used.
+- **Sensor Area used:** Based on pixel size, focal length, and resolution values, a circle inscribed in that sensor is calculated which corresponds to the value of 100%. This value indicates the area of the sensor that is considered valid. It affects the time the NEO can stay without leaving that area and therefore limits the maximum duration of the session.
 
 ### Integration with N.I.N.A.
 
-- **Force Skip on Failure:** It is possible that when programming a NEO, it is listed in the NEOCP but at the time of execution, for whatever reason, it no longer exists on the NEOCP page. This option determines whether the plugin should use the coordinates determined at the time of programming or if it should skip that NEO.
+- **Force Skip on Failure:** It is possible that when programming a NEO, it is listed in the NEOCP but at the time of execution, for whatever reason, it no longer exists on the NEOCP page. This option determines whether the plugin should use the coordinates determined when it was programmed or if it should just skip that NEO.
 - **Expand Inserted Templates:** Indicates whether a newly created object from the NEOCP Object List Container should be displayed expanded or collapsed. The default value is collapsed because it speeds up the UI.
 - **NEO Target Prefix:** Prefix added to the name of the NEO to finish the name of the generated image files.
 - **NEO Container template:** The template that the plugin will use for session creation. The template must be created beforehand.
 
-*Tip:* If you want to photograph an NEO that is moving extremely fast and you cannot obtain 3 good observations because it goes off the sensor, you can create a session for the NEO and replicate it 3 times. For each of the sessions, N.I.N.A. will recentre the NEO and we can obtain 1 good observation from each of the consecutive sessions.
+*Tip:* If you want to photograph an NEO that is moving extremely fast and you cannot obtain 3 good observations because it goes off the sensor very quickly, you can create a session for the NEO and replicate it 3 times. For each of the sessions, N.I.N.A. will recentre the NEO and we can obtain 1 good observation from each of the consecutive sessions.
 
 ## Contact
 
-If you have any ideas or want to report an issue, please contact me in the [Nina discord server](https://discord.gg/rWRbVbw) and tag me: @rbarbera#1806
+- If you have any ideas or want to report an issue, please contact me in the [Nina discord server](https://discord.gg/rWRbVbw) and tag me: @rbarbera#1806
+- If you want to keep in contact with our group of NEO observers, you can reach us on [Asociacion Valenciana de Astronomía](https://astroava.org/neocp-helper/). We have extensive experience in [astrometry studies](https://astroava.org/astrometria/) of minor bodies of our Solar System.
 ")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
