@@ -45,14 +45,14 @@
             <StackPanel
                 Grid.Row="1"
                 Grid.Column="1"
-                Margin="10,0,0,0"
+                Margin="4,0,0,0"
                 Orientation="Horizontal"
                 HorizontalAlignment="Left">
                 <Slider 
                     VerticalAlignment="Center"
                     IsSnapToTickEnabled="True"
                     Maximum="1.20"
-                    Minimum="0.05"
+                    Minimum="0.50"
                     TickFrequency="0.05"
                     ToolTip="Percentaje of the dimensions of the sensor used to compute the maximum integration time"
                     Value="{Binding SensorAreaUsage, UpdateSourceTrigger=PropertyChanged}" />
@@ -103,7 +103,7 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Left">
                 <ninactrl:UnitTextBox 
-                    Margin="10,5,0,0"
+                    Margin="0,5,0,0"
                     HorizontalAlignment="Left"
                     Text="{Binding MagBright}"
                     Unit="mag" />
@@ -128,7 +128,7 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Left">
                 <ninactrl:UnitTextBox 
-                    Margin="10,5,0,0"
+                    Margin="0,5,0,0"
                     HorizontalAlignment="Left"
                     Text="{Binding DecUp}"
                     Unit="deg" />
@@ -153,7 +153,7 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Left">
                 <ninactrl:UnitTextBox 
-                    Margin="10,5,0,0"
+                    Margin="0,5,0,0"
                     HorizontalAlignment="Left"
                     Text="{Binding ScoreLow}"
                     Unit="%" />
