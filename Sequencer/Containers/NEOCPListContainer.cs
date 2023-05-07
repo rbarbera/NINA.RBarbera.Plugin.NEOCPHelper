@@ -62,6 +62,7 @@ using NINA.Sequencer.Interfaces.Mediator;
 using System.Windows.Threading;
 using NINA.Sequencer.SequenceItem.Utility;
 using NINA.Sequencer.SequenceItem.Imaging;
+using CommunityToolkit.Mvvm.Input;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
     [ExportMetadata("Name", "NEOCP object list container")]
@@ -103,8 +104,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
             Task.Run(() => NighttimeData = nighttimeCalculator.Calculate(DateTime.Now.AddHours(4)));
 
-            LoadTargetsCommand = new AsyncCommand<bool>(LoadTargets);
-            CreateNEOFieldCommand = new AsyncCommand<bool>(CreateDSOContainer);
+            LoadTargetsCommand = new CommunityToolkit.Mvvm.Input.AsyncRelayCommand(LoadTargets);
+            CreateNEOFieldCommand = new CommunityToolkit.Mvvm.Input.AsyncRelayCommand(CreateDSOContainer);
 
             NEOCPInputTarget = new NEOCPInputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon);
             NEOCPDSO = new NEOCPDeepSkyObject(string.Empty, new Coordinates(Angle.Zero, Angle.Zero, Epoch.J2000), string.Empty, profileService.ActiveProfile.AstrometrySettings.Horizon);
@@ -133,7 +134,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             set {
                 NEOCPInputTarget.TargetName = value.TargetName;
                 NEOCPInputTarget.InputCoordinates = value.InputCoordinates;
-                NEOCPInputTarget.Rotation = value.Rotation;
             }
         }
 
@@ -189,32 +189,29 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
         }
 
-        public Task<bool> CreateDSOContainer() {
-            return Task<bool>.Run(() => {
+        public Task CreateDSOContainer() {
+            return Task.Run(() => {
                 if (SelectedNEO == null)
-                    return false;
+                    return;
                 IDeepSkyObjectContainer myTemplate = null;
                 var templates = sequenceMediator.GetDeepSkyObjectContainerTemplates();
                 myTemplate = templates.Where(tp => tp.Name == neocpHelper.SelectedTemplate).First();
 
                 DeepSkyObjectContainer fieldContainer = (DeepSkyObjectContainer)myTemplate.Clone();
-                fieldContainer.Target = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon) 
-                {
+                fieldContainer.Target = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon) {
                     TargetName = neocpHelper.TargetPrefix + SelectedNEO.Designation,
                     InputCoordinates = new InputCoordinates() { Coordinates = SelectedNEO.Coordinates() },
-                    Rotation = 0
                 };
                 fieldContainer.Name = neocpHelper.TargetPrefix + SelectedNEO.Designation;
                 fieldContainer.IsExpanded = neocpHelper.AutoExpandTemplates;
-                    
+
                 _ = _dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
                     lock (Items) {
                         this.InsertIntoSequenceBlocks(100, fieldContainer);
                         Logger.Debug("Adding target container: " + fieldContainer);
                     }
                 }));
-                return true;
-            });           
+            });    
         }
 
         public override object Clone() {
@@ -229,7 +226,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             };
             clone.Target.TargetName = this.Target.TargetName;
             clone.Target.InputCoordinates.Coordinates = this.Target.InputCoordinates.Coordinates.Transform(Epoch.J2000);
-            clone.Target.Rotation = this.Target.Rotation;
             foreach (var item in clone.Items) {
                 item.AttachNewParent(clone);
             }
@@ -254,7 +250,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
             }
         }
 
-        private Task<bool> LoadTargets(object obj) {
+        private Task LoadTargets() {
             LoadingTargets = true;
 
             return Task.Run(() => {
@@ -265,8 +261,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
                 }
                 LoadSingleTarget();
                 AfterParentChanged();
-                return true;
-            });
+            }); 
         }
 
 

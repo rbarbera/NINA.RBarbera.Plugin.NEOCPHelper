@@ -1,5 +1,4 @@
-﻿using NINA.RBarbera.Plugin.NeocpHelper.Properties;
-using NINA.Core.Model;
+﻿using NINA.Core.Model;
 using NINA.Core.Utility;
 using NINA.Image.ImageData;
 using NINA.Plugin;
@@ -16,9 +15,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Settings = NINA.RBarbera.Plugin.NeocpHelper.Properties.Settings;
 using System.Threading;
 using NINA.Sequencer.Interfaces.Mediator;
+using Settings = NINA.RBarbera.Plugin.NEOCPHelper.Properties.Settings;
+using Properties = NINA.RBarbera.Plugin.NEOCPHelper.Properties;
+
 using System.Reflection;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper {
