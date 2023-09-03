@@ -49,9 +49,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
 
 
         private static string QueryString(IAstrometrySettings astrometrySettings) {
-            var strLong = String.Format("{0:f2} {1}", 
-                Math.Abs(astrometrySettings.Longitude),(astrometrySettings.Longitude > 0) ? "e" : "w");
-            var strLat = String.Format("{0:f2}d", astrometrySettings.Latitude);
+            var strLong = String.Format("{0:f2}", (astrometrySettings.Longitude > 0) ? Math.Abs(astrometrySettings.Longitude) : Math.Abs(360+astrometrySettings.Longitude));
+            var strLat = String.Format("{0:f2}", astrometrySettings.Latitude);
             
 
             return String.Format("Parallax=2&long={0}&lat={1}&alt={2}&int=1&raty=h&mot=m&dmot=r&out=f&sun=x&oalt=20", strLong, strLat, astrometrySettings.Elevation);
