@@ -25,7 +25,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
             this.speedDec = Double.Parse(s.Substring(59, 7), CultureInfo.InvariantCulture);
         }
 
-        public NEOCPEphemeride(DateTime dateTime, double rA, double dec, double v, double speedRA, double speedDec, int maxExp) {
+        public NEOCPEphemeride(DateTime dateTime, double rA, double dec, double v, double speedRA, double speedDec, double maxExp) {
             DateTime = dateTime;
             RA = rA;
             Dec = dec;
@@ -48,11 +48,11 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
             }
         }
 
-        public int ExpMax { get; set; }
+        public double ExpMax { get; set; }
 
         public void SetScales(double pixelScale, int spotSize) {
             var ppMin = this.totalSpeed / pixelScale;
-            this.ExpMax = (int)Math.Ceiling(spotSize * 60 / ppMin);
+            this.ExpMax = spotSize * 60 / ppMin;
         }
 
         /* Ψ=arccos(sinθ1sinθ2+cosθ1cosθ2cos(ϕ1−ϕ2)) */

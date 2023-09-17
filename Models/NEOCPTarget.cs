@@ -65,7 +65,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
         public double speedRA { get; set; }
         public double speedDec { get; set; }
         public double totalSpeed { get; set; }
-        public int ExpMax { get; internal set; }
+        public double ExpMax { get; internal set; }
 
         public void SetScales(double pixelScale, int spotSize) {
             if (Ephemerides == null || Ephemerides.Count == 0)

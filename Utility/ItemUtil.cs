@@ -66,14 +66,16 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                 var listItem = item as TakeExposure;
                 if (listItem != null && listItem.ImageType == CaptureSequence.ImageTypes.LIGHT) {
                     var binning = Math.Max(listItem.Binning.X, listItem.Binning.Y);
-                    listItem.ExposureTime = Math.Min(exposureTime * binning, listItem.ExposureTime);
+                    var reducedExposure = (int)Math.Ceiling(exposureTime * binning);
+                    listItem.ExposureTime = Math.Min(reducedExposure, listItem.ExposureTime);
                     continue;
                 }
                     
                 var listSubItem = item as TakeSubframeExposure;
                 if (listSubItem != null && listSubItem.ImageType == CaptureSequence.ImageTypes.LIGHT) {
                     var binning = Math.Max(listSubItem.Binning.X, listSubItem.Binning.Y);
-                    listSubItem.ExposureTime = Math.Min(exposureTime * binning, listSubItem.ExposureTime);
+                    var reducedExposure = (int)Math.Ceiling(exposureTime * binning);
+                    listSubItem.ExposureTime = Math.Min(reducedExposure, listSubItem.ExposureTime);
                     continue;
                 }
 
@@ -82,7 +84,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                     var manyExposure = manyItem.GetTakeExposure();
                     if (manyExposure.ImageType == CaptureSequence.ImageTypes.LIGHT) {
                         var binning = Math.Max(manyExposure.Binning.X, manyExposure.Binning.Y);
-                        manyExposure.ExposureTime = Math.Min(exposureTime * binning, manyExposure.ExposureTime);
+                        var reducedExposure = (int)Math.Ceiling(exposureTime * binning);
+                        manyExposure.ExposureTime = Math.Min(reducedExposure, manyExposure.ExposureTime);
                         continue;
                     }
                 }
