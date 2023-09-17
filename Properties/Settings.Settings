@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NINA.RBarbera.Plugin.NeocpHelper.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NINA.RBarbera.Plugin.NEOCPHelper.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="UpgradeSettings" Type="System.Boolean" Scope="User">
@@ -40,6 +40,9 @@
     </Setting>
     <Setting Name="ScoreHigh" Type="System.Double" Scope="User">
       <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="ObservatoryCode" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

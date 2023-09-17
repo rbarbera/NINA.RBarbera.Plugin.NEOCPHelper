@@ -144,6 +144,17 @@ namespace NINA.RBarbera.Plugin.NeocpHelper {
             }
         }
 
+        public string ObservatoryCode {
+            get {
+                return Settings.Default.ObservatoryCode;
+            }
+            set {
+                Settings.Default.ObservatoryCode = value;
+                CoreUtil.SaveSettings(Settings.Default);
+                RaisePropertyChanged();
+            }
+        }
+
         public string SelectedTemplate {
             get {
                 return Settings.Default.SelectedTemplate;

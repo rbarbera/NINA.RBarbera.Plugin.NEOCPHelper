@@ -21,6 +21,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock 
@@ -170,9 +171,22 @@
                 Grid.Row="7"
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                Text="NEO target prefix" />
+                Text="Observatory Code" />
             <TextBox 
                 Grid.Row="7"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                Width="70"
+                Margin="10,5,0,0"
+                ToolTip="Observatory code assigned by MPC. If left empty, Site longitude, latitude and elevation from N.I.N.A. configuration, will be used."
+                Text="{Binding ObservatoryCode}" />
+            <TextBlock 
+                Grid.Row="8"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Text="NEO target prefix" />
+            <TextBox 
+                Grid.Row="8"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 Width="70"
@@ -180,12 +194,12 @@
                 ToolTip="The name used for the template clones inserted on the sequencer."
                 Text="{Binding TargetPrefix}" />
             <TextBlock 
-                Grid.Row="8"
+                Grid.Row="9"
                 Grid.Column="0"
                 VerticalAlignment="Center"
                 Text="NEO container template" />
             <ComboBox
-                Grid.Row="8"
+                Grid.Row="9"
                 Grid.Column="1"                
                 Height="25"
                 MinWidth="70"

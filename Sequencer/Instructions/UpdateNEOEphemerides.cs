@@ -100,7 +100,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                     }
                     progress.Report(new ApplicationStatus() { Status = String.Format("Retrieving {0} ephemerides", targetName) });
                     try {
-                        var ephemerides = NEOCPDownloader.GetEphemerides(targetName, profileService.ActiveProfile.AstrometrySettings);
+                        var ephemerides = NEOCPDownloader.GetEphemerides(targetName, profileService.ActiveProfile.AstrometrySettings,neocpHelper);
                         if (ephemerides.Count == 0) {
                             var error = String.Format("Ephemerides not found for {0}", targetName);
                             Issues.Add(error);

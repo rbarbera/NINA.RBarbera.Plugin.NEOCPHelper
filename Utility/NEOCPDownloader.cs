@@ -3,6 +3,7 @@ using NINA.Profile.Interfaces;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -48,12 +49,17 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         }
 
 
-        private static string QueryString(IAstrometrySettings astrometrySettings) {
-            var strLong = String.Format("{0:f2}", (astrometrySettings.Longitude > 0) ? Math.Abs(astrometrySettings.Longitude) : Math.Abs(360+astrometrySettings.Longitude));
-            var strLat = String.Format("{0:f2}", astrometrySettings.Latitude);
-            
+        private static string QueryString(IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
 
-            return String.Format("Parallax=2&long={0}&lat={1}&alt={2}&int=1&raty=h&mot=m&dmot=r&out=f&sun=x&oalt=20", strLong, strLat, astrometrySettings.Elevation);
+            if (neocpHelper.ObservatoryCode != "") {
+                return String.Format("Parallax=1&obscode={0}&int=1&raty=h&mot=m&dmot=r&out=f&sun=x&oalt=20", neocpHelper.ObservatoryCode);
+            } else {
+                var strLong = String.Format("{0:f2}", (astrometrySettings.Longitude > 0) ? Math.Abs(astrometrySettings.Longitude) : Math.Abs(360 + astrometrySettings.Longitude));
+                var strLat = String.Format("{0:f2}", astrometrySettings.Latitude);
+
+
+                return String.Format("Parallax=2&long={0}&lat={1}&alt={2}&int=1&raty=h&mot=m&dmot=r&out=f&sun=x&oalt=20", strLong, strLat, astrometrySettings.Elevation);
+            }
         }
 
 
@@ -65,7 +71,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
 
         private static Dictionary<string, List<NEOCPEphemeride>> GetEphemerides(IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
-            var query = QueryString(astrometrySettings) + "&" + neocpHelper.FilterString;
+            var query = QueryString(astrometrySettings, neocpHelper) + "&" + neocpHelper.FilterString;
             var data = Encoding.ASCII.GetBytes(query);
 
             request.Method = "POST";
@@ -85,10 +91,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             return scanner.ReadEphemerides();
         }
 
-        public static Dictionary<string, List<NEOCPEphemeride>> GetEphemerides(string obj, IAstrometrySettings astrometrySettings) {
+        public static Dictionary<string, List<NEOCPEphemeride>> GetEphemerides(string obj, IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
 
-            var query = QueryString(astrometrySettings) + "&" + FilterTarget(obj);
+            var query = QueryString(astrometrySettings, neocpHelper) + "&" + FilterTarget(obj);
             var data = Encoding.ASCII.GetBytes(query);
 
             request.Method = "POST";
