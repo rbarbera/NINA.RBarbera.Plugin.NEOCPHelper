@@ -52,7 +52,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
 
         public void SetScales(double pixelScale, int spotSize) {
             var ppMin = this.totalSpeed / pixelScale;
-            this.ExpMax = spotSize * 60 / ppMin;
+            this.ExpMax = Math.Round(spotSize * 60 / ppMin, 1);
         }
 
         /* Ψ=arccos(sinθ1sinθ2+cosθ1cosθ2cos(ϕ1−ϕ2)) */

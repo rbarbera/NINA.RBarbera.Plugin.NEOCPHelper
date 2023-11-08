@@ -63,6 +63,9 @@ using System.Windows.Threading;
 using NINA.Sequencer.SequenceItem.Utility;
 using NINA.Sequencer.SequenceItem.Imaging;
 using CommunityToolkit.Mvvm.Input;
+using Castle.Core.Internal;
+using Accord.Imaging.Filters;
+using NINA.Core.Utility.Notification;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
     [ExportMetadata("Name", "NEOCP object list container")]
@@ -191,11 +194,20 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
         public Task CreateDSOContainer() {
             return Task.Run(() => {
-                if (SelectedNEO == null)
+                if (SelectedNEO == null || neocpHelper.SelectedTemplate.IsNullOrEmpty()) {
+                    Notification.ShowError($"NEO container template not defined. Please review NEOCP Helper configuration");
+                    Logger.Error($"NEO container template not defined.");
                     return;
+                }
                 IDeepSkyObjectContainer myTemplate = null;
                 var templates = sequenceMediator.GetDeepSkyObjectContainerTemplates();
-                myTemplate = templates.Where(tp => tp.Name == neocpHelper.SelectedTemplate).First();
+                var candidates = templates.Where(tp => tp.Name == neocpHelper.SelectedTemplate);
+                if (candidates.Count() == 0) {
+                    Notification.ShowError($"Template \"{neocpHelper.SelectedTemplate}\" not found. Please review NEOCP Helper configuration");
+                    Logger.Error($"Template \"{neocpHelper.SelectedTemplate}\" not found");
+                    return;
+                }
+                myTemplate = candidates.First();
 
                 DeepSkyObjectContainer fieldContainer = (DeepSkyObjectContainer)myTemplate.Clone();
                 fieldContainer.Target = new InputTarget(Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Latitude), Angle.ByDegree(profileService.ActiveProfile.AstrometrySettings.Longitude), profileService.ActiveProfile.AstrometrySettings.Horizon) {

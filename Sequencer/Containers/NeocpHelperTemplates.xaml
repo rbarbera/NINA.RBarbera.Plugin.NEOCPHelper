@@ -309,7 +309,7 @@
                                         <DataGridTextColumn Header=" Arc " Binding="{Binding Arc}" />
                                         <DataGridTextColumn Header=" Not Seen in/Days " Binding="{Binding NotSeenIn}" />
                                         <DataGridTextColumn Header=" H " Binding="{Binding H, StringFormat=\{0:f1\}}" />
-                                        <DataGridTextColumn Header=" Exp. Max (s) " Binding="{Binding ExpMax}" />
+                                        <DataGridTextColumn Header=" Exp. Max (s) " Binding="{Binding ExpMax, StringFormat=\{0:f1\}}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
                                 <Button 
