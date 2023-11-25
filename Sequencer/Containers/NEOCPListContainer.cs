@@ -194,7 +194,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Containers {
 
         public Task CreateDSOContainer() {
             return Task.Run(() => {
-                if (SelectedNEO == null || neocpHelper.SelectedTemplate.IsNullOrEmpty()) {
+                if (SelectedNEO == null || neocpHelper.SelectedTemplate.Length == 0) {
                     Notification.ShowError($"NEO container template not defined. Please review NEOCP Helper configuration");
                     Logger.Error($"NEO container template not defined.");
                     return;
