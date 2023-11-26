@@ -1,6 +1,7 @@
 ﻿using NINA.Core.Utility;
 using NINA.Profile.Interfaces;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
+using NINA.RBarbera.Plugin.NEOCPHelper.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
@@ -13,8 +14,8 @@ using System.Threading.Tasks;
 
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
-    internal class NEOCPDownloader {
-        public static List<NEOCPTarget> Get(IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
+    internal class MPCDownloader {
+        public static List<NEOCPTarget> GetNEOList(IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
             var neos = GetNEOCP();
             var ephemerides = GetEphemerides(astrometrySettings, neocpHelper);
 
@@ -28,6 +29,52 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                     
             });
             return result;
+        }
+
+        public static Dictionary<string, List<NEOCPEphemeride>> GetNEOEphemerides(string obj, IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
+            var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
+
+            var query = NEOCPQueryString(astrometrySettings, neocpHelper) + "&" + FilterTarget(obj);
+            var data = Encoding.ASCII.GetBytes(query);
+
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = data.Length;
+
+            using (var stream = request.GetRequestStream()) {
+                stream.Write(data, 0, data.Length);
+            }
+
+            var response = (HttpWebResponse)request.GetResponse();
+
+            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+            var scanner = new NEOCPScanner(responseString);
+
+            return scanner.ReadEphemerides();
+        }
+
+        public static List<NEOCPEphemeride> GetMPCEphemerides(string obj, IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
+            var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/mpeph2.cgi");
+
+            var query = MPCQueryString(astrometrySettings, obj, neocpHelper);
+            var data = Encoding.ASCII.GetBytes(query);
+
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = data.Length;
+
+            using (var stream = request.GetRequestStream()) {
+                stream.Write(data, 0, data.Length);
+            }
+
+            var response = (HttpWebResponse)request.GetResponse();
+
+            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+            var scanner = new MPCScanner(responseString);
+
+            return scanner.ReadEphemerides().First().Value;
         }
 
         private static List<NEOCPTarget> GetNEOCP() {
@@ -49,7 +96,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         }
 
 
-        private static string QueryString(IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
+        private static string NEOCPQueryString(IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
 
             if (neocpHelper.ObservatoryCode != "") {
                 return String.Format("Parallax=1&obscode={0}&int=1&raty=h&mot=m&dmot=r&out=f&sun=x&oalt=20", neocpHelper.ObservatoryCode);
@@ -62,6 +109,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             }
         }
 
+        private static string MPCQueryString(IAstrometrySettings astrometrySettings, string targetName, NeocpHelper neocpHelper) {
+            var strLong = String.Format("{0:f2}", (astrometrySettings.Longitude > 0) ? Math.Abs(astrometrySettings.Longitude) : Math.Abs(360 + astrometrySettings.Longitude));
+            var strLat = String.Format("{0:f2}", astrometrySettings.Latitude);
+
+            return String.Format("ty=e&TextArea={4}&d=&l=&i=&u=h&uto=0&c={0}&long={1}&lat={2}&alt={3}&raty=a&s=c&m=m&igd=y&ibh=y&adir=S&oed=&e=-2&resoc=&tit=&bu=&ch=c&ce=f&js=f", neocpHelper.ObservatoryCode, strLong, strLat, astrometrySettings.Elevation, targetName);
+        }
+
 
         private static string FilterTarget(string targetName) {
             var SelectedObject = "W=j";
@@ -71,7 +125,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
 
         private static Dictionary<string, List<NEOCPEphemeride>> GetEphemerides(IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
-            var query = QueryString(astrometrySettings, neocpHelper) + "&" + neocpHelper.FilterString;
+            var query = NEOCPQueryString(astrometrySettings, neocpHelper) + "&" + neocpHelper.FilterString;
             var data = Encoding.ASCII.GetBytes(query);
 
             request.Method = "POST";
@@ -91,27 +145,6 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             return scanner.ReadEphemerides();
         }
 
-        public static Dictionary<string, List<NEOCPEphemeride>> GetEphemerides(string obj, IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
-            var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/confirmeph2.cgi");
-
-            var query = QueryString(astrometrySettings, neocpHelper) + "&" + FilterTarget(obj);
-            var data = Encoding.ASCII.GetBytes(query);
-
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = data.Length;
-
-            using (var stream = request.GetRequestStream()) {
-                stream.Write(data, 0, data.Length);
-            }
-
-            var response = (HttpWebResponse)request.GetResponse();
-
-            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-
-            var scanner = new NEOCPScanner(responseString);
-
-            return scanner.ReadEphemerides();
-        }
+        
     }
 }

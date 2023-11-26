@@ -1,24 +1,20 @@
-﻿using System;
+﻿using NINA.RBarbera.Plugin.NeocpHelper.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NINA.RBarbera.Plugin.NeocpHelper.Models;
 
-namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
-    internal class NEOCPScanner: StringReader
-    {
-        public NEOCPScanner(string s): base(s)
-        {
+namespace NINA.RBarbera.Plugin.NEOCPHelper.Utility {
+    internal class MPCScanner : StringReader {
+        public MPCScanner(string s) : base(s) {
         }
 
-        public Dictionary<string, List<NEOCPEphemeride>> ReadEphemerides()
-        {
+        public Dictionary<string,List<NEOCPEphemeride>> ReadEphemerides() {
             var ephemerides = new Dictionary<string, List<NEOCPEphemeride>>();
-            do
-            {
+            do {
                 this.SkipTo("<b>");
                 var des = this.GetUntil("</b>");
                 if (des == string.Empty)
@@ -26,13 +22,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                 this.SkipTo("<pre>");
                 var ep = this.GetUntil("</pre>");
                 var list = new List<NEOCPEphemeride>();
-                foreach (string line in ep.Split("\r\n".ToCharArray()))
-                {
-                    try
-                    {
-                        list.Add(NEOCPEphemeride.FromNEOCP(line));
-                    } catch(Exception e)
-                    {
+                foreach (string line in ep.Split("\r\n".ToCharArray())) {
+                    try {
+                        list.Add(NEOCPEphemeride.FromMPC(line));
+                    } catch (Exception e) {
                         Debug.WriteLine(e);
                     }
                 }
@@ -43,19 +36,15 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             return ephemerides;
         }
 
-        public void SkipTo(string label)
-        {
+        public void SkipTo(string label) {
             var idx = 0;
-            do
-            {
+            do {
                 var current = Read();
                 if (current < 0)
                     break;
-                if (current == label[idx])
-                {
+                if (current == label[idx]) {
                     idx++;
-                } else
-                {
+                } else {
                     idx = 0;
                 }
                 if (idx == label.Length)
@@ -64,21 +53,16 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             } while (true);
         }
 
-        public string GetUntil(string label)
-        {
+        public string GetUntil(string label) {
             var idx = 0;
             var sb = new StringBuilder();
-            do
-            {
+            do {
                 var current = Read();
                 if (current < 0)
                     break;
-                if (current == label[idx])
-                {
+                if (current == label[idx]) {
                     idx++;
-                }
-                else
-                {
+                } else {
                     sb.Append((char)current);
                     idx = 0;
                 }

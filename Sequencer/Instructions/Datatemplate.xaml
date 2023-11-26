@@ -18,7 +18,28 @@
         x:Key="SessionDetails"
         x:Shared="false"
         Orientation="Horizontal">
- 
+
+        <TextBlock
+            Margin="7.5,0,7.5,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="Ephemeris source" />
+        <ComboBox
+            Height="25"
+            MinWidth="70"
+            Margin="10,0,2,0"
+            IsEditable="False"
+            IsTextSearchEnabled="False"
+            SelectedIndex="{Binding EphemerisSourceIndex}"
+            >
+            <ComboBoxItem IsSelected="True">NEOCP</ComboBoxItem>
+            <ComboBoxItem>MPC</ComboBoxItem> 
+        </ComboBox>
+        <TextBlock
+            Margin="7.5,0,7.5,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="|" />
         <TextBlock
             Margin="7.5,0,7.5,0"
             HorizontalAlignment="Center"
@@ -32,12 +53,6 @@
             Text="{Binding MaxTrackLenght}"
             TextAlignment="Right"
             Unit="px" />
-        <TextBlock
-            Margin="7.5,0,7.5,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Text="|" />
-        
         <TextBlock
             Margin="7.5,0,7.5,0"
             HorizontalAlignment="Center"

@@ -31,11 +31,13 @@ using NINA.Core.Utility;
 using NINA.Astrometry;
 using NINA.Sequencer.SequenceItem.Camera;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
+using Serilog.Debugging;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
 
-    [ExportMetadata("Name", "Update NEO session")]
-    [ExportMetadata("Description", "Get the most recent ephemerides for the NEO defined on the container and update coordinates, time conditions and exposure")]
+
+    [ExportMetadata("Name", "Update MPC object session")]
+    [ExportMetadata("Description", "Get the most recent ephemerides for the MPC object defined on the container and update coordinates, time conditions and exposure")]
     [ExportMetadata("Icon", "ImpactorSVG")]
     [ExportMetadata("Category", "NEOCP Helper")]
     [Export(typeof(ISequenceItem))]
@@ -51,6 +53,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
         private INighttimeCalculator nighttimeCalculator;
         private NeocpHelper neocpHelper;
         private double _sensorAreaUsage;
+        private int _ephemerisSourceIndex;
 
         [ImportingConstructor]
         public UpdateNEOEphemerides(IProfileService profileService,
@@ -62,6 +65,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
             this.cameraMediator = cameraMediator;
             this.nighttimeCalculator = nighttimeCalculator;
             this.neocpHelper = new NeocpHelper(sequenceMediator);
+            _ephemerisSourceIndex = 0;
 
             this.MaxTrackLenght = neocpHelper.MaxLength;
             this.SensorAreaUsage = neocpHelper.SensorAreaUsage;
@@ -86,6 +90,16 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                 RaisePropertyChanged();
             }
         }
+
+        [JsonProperty]
+        public int EphemerisSourceIndex {
+            get => _ephemerisSourceIndex;
+            set {
+                _ephemerisSourceIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public IList<string> Issues { get => issues; set { issues = value; RaisePropertyChanged(); } }
 
         public override Task Execute(IProgress<ApplicationStatus> progress, CancellationToken token) {
@@ -100,14 +114,28 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
                     }
                     progress.Report(new ApplicationStatus() { Status = String.Format("Retrieving {0} ephemerides", targetName) });
                     try {
-                        var ephemerides = NEOCPDownloader.GetEphemerides(targetName, profileService.ActiveProfile.AstrometrySettings,neocpHelper);
-                        if (ephemerides.Count == 0) {
-                            var error = String.Format("Ephemerides not found for {0}", targetName);
-                            Issues.Add(error);
-                            Logger.Error(error);
-                            throw new SequenceEntityFailedException(string.Join(",", Issues));
-                        }
-                        var neo = new NEOCPTarget(ephemerides.First().Value);
+
+                        NEOCPTarget neo;
+
+                        if (EphemerisSourceIndex == 0) {
+                            var ephemerides = MPCDownloader.GetNEOEphemerides(targetName, profileService.ActiveProfile.AstrometrySettings, neocpHelper);
+                            if (ephemerides.Count == 0) {
+                                var error = String.Format("Ephemerides not found for {0}", targetName);
+                                Issues.Add(error);
+                                Logger.Error(error);
+                                throw new SequenceEntityFailedException(string.Join(",", Issues));
+                            }
+                            neo = new NEOCPTarget(ephemerides.First().Value);
+                        } else {
+                            var list = MPCDownloader.GetMPCEphemerides(targetName, profileService.ActiveProfile.AstrometrySettings, neocpHelper);
+                            if (list.Count == 0) {
+                                var error = String.Format("Ephemerides not found for {0}", targetName);
+                                Issues.Add(error);
+                                Logger.Error(error);
+                                throw new SequenceEntityFailedException(string.Join(",", Issues));
+                            }
+                            neo = new NEOCPTarget(list);
+                        }  
 
                         var cameraInfo = cameraMediator.GetInfo();
                         var cameraSize = Math.Min(cameraInfo.XSize, cameraInfo.YSize) * SensorAreaUsage;

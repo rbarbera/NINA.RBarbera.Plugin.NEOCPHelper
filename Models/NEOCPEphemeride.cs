@@ -13,16 +13,31 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
 
     internal class NEOCPEphemeride
     {
-        public NEOCPEphemeride(string s) 
-        {
-            if (s == null) return;
 
-            this.DateTime = DateTime.ParseExact(s.Substring(0, 15),"yyyy MM dd HHmm",null);
-            this.RA = AstroUtil.HMSToDegrees(s.Substring(18, 8));
-            this.Dec = AstroUtil.DMSToDegrees(s.Substring(28, 8));
-            this.V = Double.Parse(s.Substring(46, 4), CultureInfo.InvariantCulture);
-            this.speedRA = Double.Parse(s.Substring(51, 7), CultureInfo.InvariantCulture);
-            this.speedDec = Double.Parse(s.Substring(59, 7), CultureInfo.InvariantCulture);
+        static public NEOCPEphemeride FromNEOCP(string s) {
+            if (s == null) return null;
+
+            var dateTime = DateTime.ParseExact(s.Substring(0, 15), "yyyy MM dd HHmm", null);
+            var ra = AstroUtil.HMSToDegrees(s.Substring(18, 8));
+            var dec = AstroUtil.DMSToDegrees(s.Substring(28, 8));
+            var v = Double.Parse(s.Substring(46, 4), CultureInfo.InvariantCulture);
+            var speedRA = Double.Parse(s.Substring(51, 7), CultureInfo.InvariantCulture);
+            var speedDec = Double.Parse(s.Substring(59, 7), CultureInfo.InvariantCulture);
+
+            return new NEOCPEphemeride(dateTime, ra, dec, v, speedRA, speedDec, 0);
+        }
+
+        static public NEOCPEphemeride FromMPC(string s) {
+            if (s == null) return null;
+
+            var dateTime = DateTime.ParseExact(s.Substring(0, 15), "yyyy MM dd HHmm", null);
+            var ra = AstroUtil.HMSToDegrees(s.Substring(18, 8));
+            var dec = AstroUtil.DMSToDegrees(s.Substring(29, 9));
+            var v = Double.Parse(s.Substring(69, 4), CultureInfo.InvariantCulture);
+            var speedRA = Double.Parse(s.Substring(76, 7), CultureInfo.InvariantCulture);
+            var speedDec = Double.Parse(s.Substring(85, 7), CultureInfo.InvariantCulture);
+
+            return new NEOCPEphemeride(dateTime, ra, dec, v, speedRA, speedDec, 0);
         }
 
         public NEOCPEphemeride(DateTime dateTime, double rA, double dec, double v, double speedRA, double speedDec, double maxExp) {

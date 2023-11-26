@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 
 // [MANDATORY] The assembly versioning
 //Should be incremented for each new release build of a plugin
-[assembly: AssemblyVersion("3.0.3.1")]
-[assembly: AssemblyFileVersion("3.0.3.1")]
+[assembly: AssemblyVersion("3.0.4.1")]
+[assembly: AssemblyFileVersion("3.0.4.1")]
 
 // [MANDATORY] The name of your plugin
 [assembly: AssemblyTitle("NEOCP Helper")]
@@ -58,7 +58,7 @@ To perform this task, the plugin relies on 4 elements:
 
 - The plugin's configuration options.
 - The NEOCP Object List Container, where initial data for the NEO is obtained, and sessions associated with each object are generated and contained.
-- The ""Update NEO Session"" instruction that reads ephemerides in real-time when executed, calculates the optimal exposure time, and determines the maximum session duration to keep the asteroid within the sensor range.
+- The ""Update MPC Object Session"" instruction that reads ephemerides in real-time when executed, calculates the optimal exposure time, and determines the maximum session duration to keep the asteroid within the sensor range.
 - A template for taking photos that the user must adapt to their needs. It should include the ""Update NEO Session"" and ""Take Exposure"" commands and a ""Loop for Time Span"" loop.
 
 ## NEOCP Object List Container
@@ -76,17 +76,17 @@ To observe each object, the plugin expects the user to have previously defined a
 - **Slew and Center:** locates the necessary sky position to ensure that the NEO trace during the session will be contained within the desired sensor region.
 - **Take Exposure:** where the camera binning and maximum exposure time per shot are specified.
 - **Loop Time Span:** here we indicate the total duration of the session for each object.
-- **Update NEO Session:** This instruction obtains data from NEOCP and updates all parameters used in the aforementioned instructions.
+- **Update MPC Object Session:** This instruction obtains data from NEOCP and updates all parameters used in the aforementioned instructions.
 
 You can download a basic example template for use in NEOCP Helper at [this link](https://github.com/rbarbera/NINA.RBarbera.Plugin.NEOCPHelper/releases/download/static/NEO-basic-session.template.json).
 
-## Operation of the ""Update NEO Session"" instruction.
+## Operation of the ""Update MPC Object Session"" instruction.
 
 What characterizes object observation in the NEOCP is the volatility of the presented data. As different observers obtain new data from these objects, their orbital elements are recalculated and position and velocity predictions vary. Even in some cases, objects are removed from the NEOCP list. This variability means that programming of objects done with several hours difference to the observation time becomes invalidated by the latest data.
 
-NEOCP Helper attempts to solve this problem with the ""Update NEO Session"" instruction. This instruction must be introduced in any container with coordinates and target name. For example, in a Deep Sky Observer Container. Its operation is quite straightforward: It uses the Target Name of the container to try to download the ephemeris of that NEO from the Minor Planner Center. If we have configured a prefix for our objects (to facilitate the organization of images), this prefix is removed before making the query.
+NEOCP Helper attempts to solve this problem with the ""Update MCP Object Session"" instruction. This instruction must be introduced in any container with coordinates and target name. For example, in a Deep Sky Observer Container. Its operation is quite straightforward: It uses the Target Name of the container to try to download the ephemeris of that object from the Minor Planner Center. If we have configured a prefix for our objects (to facilitate the organization of images), this prefix is removed before making the query. You can choose the ephemerides source between NEOCP identifiers (for object on the NEOCP page) and MPC for the reset (any asteroid or comet known by the MPC)
 
-Once updated ephemerides are obtained, Update NEO Session calculates:
+Once updated ephemerides are obtained, Update MPC Object Session calculates:
 
 - The maximum exposure time in each take to respect the maximum length (in pixels) we want the NEO to leave on the image. For these calculations, the pixel size of the camera, the focal length of the telescope, and the binning configuration in the ""Take Exposure"" instruction contained in the same container are used.
 - The maximum total duration of the session to ensure that the NEO will be within the configured sensor fraction.
