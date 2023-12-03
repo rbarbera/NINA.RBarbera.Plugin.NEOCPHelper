@@ -72,6 +72,9 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Sequencer.Instructions {
         }
 
         private UpdateNEOEphemerides(UpdateNEOEphemerides cloneMe) : this(cloneMe.profileService, cloneMe.sequenceMediator, cloneMe.cameraMediator, cloneMe.nighttimeCalculator) {
+            this.MaxTrackLenght = cloneMe.MaxTrackLenght;
+            this.SensorAreaUsage = cloneMe.SensorAreaUsage;
+            this.EphemerisSourceIndex = cloneMe.EphemerisSourceIndex;
             CopyMetaData(cloneMe);
         }
 
