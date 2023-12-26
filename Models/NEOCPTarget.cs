@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using TimeInterpolation.MathUtil;
+using System.Globalization;
 
 namespace NINA.RBarbera.Plugin.NeocpHelper.Models
 {
@@ -20,13 +21,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models
             this.Designation = neocpline.Substring(0, 7);
             this.Score = Int32.Parse(neocpline.Substring(8, 3));
             this.Discovery = neocpline.Substring(12, 12);
-            this.RA = Double.Parse(neocpline.Substring(26, 7));
-            this.Dec = Double.Parse(neocpline.Substring(34, 8));
-            this.V = Double.Parse(neocpline.Substring(43, 4));
+            this.RA = Double.Parse(neocpline.Substring(26, 7), CultureInfo.InvariantCulture);
+            this.Dec = Double.Parse(neocpline.Substring(34, 8), CultureInfo.InvariantCulture);
+            this.V = Double.Parse(neocpline.Substring(43, 4), CultureInfo.InvariantCulture);
             this.NObs = Int32.Parse(neocpline.Substring(78, 4));
-            this.Arc = Double.Parse(neocpline.Substring(83, 6));
-            this.H = Double.Parse(neocpline.Substring(90, 4));
-            this.NotSeenIn = Double.Parse(neocpline.Substring(95));
+            this.Arc = Double.Parse(neocpline.Substring(83, 6), CultureInfo.InvariantCulture);
+            this.H = Double.Parse(neocpline.Substring(90, 4), CultureInfo.InvariantCulture);
+            this.NotSeenIn = Double.Parse(neocpline.Substring(95), CultureInfo.InvariantCulture);
         }
 
         public NEOCPTarget(List<NEOCPEphemeride> ephemerides) {
