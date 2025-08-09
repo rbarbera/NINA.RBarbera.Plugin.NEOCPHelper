@@ -1,4 +1,4 @@
-﻿using NINA.Core.Utility;
+using NINA.Core.Utility;
 using NINA.Profile.Interfaces;
 using NINA.RBarbera.Plugin.NeocpHelper.Models;
 using NINA.RBarbera.Plugin.NEOCPHelper.Utility;
@@ -57,8 +57,25 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         public static List<NEOCPEphemeride> GetMPCEphemerides(string obj, IAstrometrySettings astrometrySettings, NeocpHelper neocpHelper) {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/mpeph2.cgi");
 
+            // Mangle names so they are accepted by MPC API
+            var Type = "unknown";
+            if (obj.IndexOf("(") > 1) {
+                Type = "comet";
+                obj = obj.Replace(" ", "+");
+                obj = obj[..(obj.IndexOf("(") - 1)];
+            }
+            else if (obj.IndexOf(" ") > 1) {
+                Type = "unnumbered body";
+                obj = obj.Replace(" ", "+");
+            }
+            else if (obj.IndexOf("/") > 1) {
+                Type = "numbered body";
+                obj = obj.Replace("/", "+");
+            }
+            Logger.Info("Object " + obj + " identified as " + Type);
+
             var query = MPCQueryString(astrometrySettings, obj, neocpHelper);
-            var data = Encoding.ASCII.GetBytes(query);
+            var data = Encoding.UTF8.GetBytes(query);
 
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
@@ -148,3 +165,5 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         
     }
 }
+
+
