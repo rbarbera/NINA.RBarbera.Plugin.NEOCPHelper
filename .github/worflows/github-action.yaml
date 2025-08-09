@@ -19,13 +19,13 @@ permissions:
 
 env:
   # Adjust this to your plugin title
-  PLUGIN_NAME: "My Plugin Name"
+  PLUGIN_NAME: "NEOCP Helper"
   # Your solution name
-  PLUGIN_SLN_NAME: "MyPlugin"
+  PLUGIN_SLN_NAME: "NINA.RBarbera.Plugin.NEOCPHelper"
   # The name of the resulting dll file
-  PLUGIN_DLL_NAME: "NINA.Plugins.MyPlugin"
+  PLUGIN_DLL_NAME: "NINA.RBarbera.Plugin.NEOCPHelper"
   # The relative path to your manifest folder inside the manifest repository
-  PLUGIN_MANIFEST_PATH: "m/MyPlugin"
+  PLUGIN_MANIFEST_PATH: "n/NEOCPHelper"
 
 jobs:
   build-and-release:
