@@ -58,7 +58,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/mpeph2.cgi");
 
             // Mangle names so they are accepted by MPC API
-            var Type = "";
+            var Type = "unknown";
             if (obj.IndexOf("(") > 1) {
                 Type = "comet";
                 obj = obj.Replace(" ", "+");
@@ -68,7 +68,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                 Type = "unnumbered body";
                 obj = obj.Replace(" ", "+");
             }
-            else {
+            else if (obj.IndexOf("(") > 1) {
                 Type = "numbered body";
                 obj = obj.Replace("/", "+");
             }
@@ -165,3 +165,4 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         
     }
 }
+
