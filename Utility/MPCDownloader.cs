@@ -58,6 +58,9 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             var request = (HttpWebRequest)WebRequest.Create("https://cgi.minorplanetcenter.net/cgi-bin/mpeph2.cgi");
 
             // Mangle names so they are accepted by MPC API
+            if (obj.IndexOf("(") > 1) {
+                obj = obj[..(obj.IndexOf("(") - 1)];
+            }
             obj = WebUtility.UrlEncode(obj);
             Logger.Info("Object " + obj);
 
