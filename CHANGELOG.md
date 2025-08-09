@@ -1,5 +1,8 @@
 ﻿# NEOCP Helper
 
+## 3.0.7.1
+- Add more tolerant object name scheme to Update NEOCP instructions
+
 ## 3.0.6.1
 - Fix crash downloading MPC listing, on N.I.N.A configured with non english languaje.
 
