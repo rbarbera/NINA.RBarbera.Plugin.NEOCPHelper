@@ -22,7 +22,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
             var dec = AstroUtil.DMSToDegrees(s.Substring(28, 8));
             var v = Double.Parse(s.Substring(46, 4), CultureInfo.InvariantCulture);
             var speedRA = Double.Parse(s.Substring(51, 7), CultureInfo.InvariantCulture);
-            var speedDec = Double.Parse(s.Substring(59, 7), CultureInfo.InvariantCulture);
+            var speedDec = Double.Parse(s.Substring(59, 5), CultureInfo.InvariantCulture);
 
             return new NEOCPEphemeride(dateTime, ra, dec, v, speedRA, speedDec, 0);
         }
@@ -99,3 +99,4 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Models {
         }
     }
 }
+
