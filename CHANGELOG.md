@@ -1,8 +1,11 @@
 ﻿# NEOCP Helper
 
+## 3.0.7.3
+- Fix for 3I/ATLAS and similar special comets
+
 ## 3.0.7.2
 - Fixed comets with "(whatever)" on its name
-- 
+
 ## 3.0.7.1
 - Add more tolerant object name scheme to Update NEOCP instructions
 
