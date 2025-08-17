@@ -61,12 +61,10 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
             var Type = "unknown";
             if (obj.Substring(0, 3).Contains("C/") || obj.Substring(0, 3).Contains("P/") || obj.Substring(0, 3).Contains("I/")) {
                 Type = "comet";
-                if (obj.IndexOf(" ") > 1) {
-                    obj = obj.Replace(" ", "+");
-                }
                 if (obj.IndexOf("(") > 1) {
                     obj = obj[..(obj.IndexOf("(") - 1)];
                 }
+                obj = WebUtility.UrlEncode(obj);
             }
             else if (obj.IndexOf(" ") > 1) {
                 Type = "unnumbered body";
@@ -169,6 +167,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         
     }
 }
+
 
 
 
