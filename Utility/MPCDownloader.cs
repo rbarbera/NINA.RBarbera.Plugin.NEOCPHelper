@@ -59,11 +59,13 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
 
             // Mangle names so they are accepted by MPC API
             var Type = "unknown";
-            if (obj.IndexOf("(") > 1) {
+            if (obj.Substring(0, 3).Contains("C/") || obj.Substring(0, 3).Contains("P/") || obj.Substring(0, 3).Contains("I/")) {
                 Type = "comet";
-                obj = obj.Replace(" ", "+");
-                obj = obj[..(obj.IndexOf("(") - 1)];
-            } 
+                if (obj.IndexOf("(") > 1) {
+                    obj = obj[..(obj.IndexOf("(") - 1)];
+                }
+                obj = WebUtility.UrlEncode(obj);
+            }
             else if (obj.IndexOf(" ") > 1) {
                 Type = "unnumbered body";
                 obj = obj.Replace(" ", "+");
@@ -165,6 +167,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         
     }
 }
+
+
 
 
 
