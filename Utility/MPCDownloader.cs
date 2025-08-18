@@ -65,15 +65,15 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                     obj = obj[..(obj.IndexOf("(") - 1)];
                 }
                 obj = WebUtility.UrlEncode(obj);
-            }
+            } 
+            else if (obj.IndexOf("/") > 1) {
+                Type = "numbered body";
+                obj = obj[..(obj.IndexOf("/"))];
+            } 
             else if (obj.IndexOf(" ") > 1) {
                 Type = "unnumbered body";
                 obj = obj.Replace(" ", "+");
             } 
-            else if (obj.IndexOf("/") > 1) {
-                Type = "numbered body";
-                obj = obj.Replace("/", "+");
-            }
             Logger.Info("Object " + obj + " identified as " + Type);
 
             var query = MPCQueryString(astrometrySettings, obj, neocpHelper);
@@ -167,6 +167,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         
     }
 }
+
+
 
 
 
