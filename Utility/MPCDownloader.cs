@@ -65,10 +65,12 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                     obj = obj[..(obj.IndexOf("(") - 1)];
                 }
                 obj = WebUtility.UrlEncode(obj);
-            } else if (obj.IndexOf("/") > 1) {
+            } 
+            else if (obj.IndexOf("/") > 1) {
                 Type = "numbered body";
                 obj = obj[..(obj.IndexOf("/"))];
-            } else if (obj.IndexOf(" ") > 1) {
+            } 
+            else if (obj.IndexOf(" ") > 1) {
                 Type = "unnumbered body";
                 obj = obj.Replace(" ", "+");
             } 
@@ -165,6 +167,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
         
     }
 }
+
 
 
 
