@@ -66,7 +66,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                 var listItem = item as TakeExposure;
                 if (listItem != null && listItem.ImageType == CaptureSequence.ImageTypes.LIGHT) {
                     var binning = Math.Max(listItem.Binning.X, listItem.Binning.Y);
-                    var reducedExposure = (int)Math.Ceiling(exposureTime * binning);
+                    var reducedExposure = Math.Round(exposureTime * binning, 1);
                     listItem.ExposureTime = Math.Min(reducedExposure, listItem.ExposureTime);
                     continue;
                 }
@@ -74,7 +74,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                 var listSubItem = item as TakeSubframeExposure;
                 if (listSubItem != null && listSubItem.ImageType == CaptureSequence.ImageTypes.LIGHT) {
                     var binning = Math.Max(listSubItem.Binning.X, listSubItem.Binning.Y);
-                    var reducedExposure = (int)Math.Ceiling(exposureTime * binning);
+                    var reducedExposure = Math.Round(exposureTime * binning, 1);
                     listSubItem.ExposureTime = Math.Min(reducedExposure, listSubItem.ExposureTime);
                     continue;
                 }
@@ -84,7 +84,7 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                     var manyExposure = manyItem.GetTakeExposure();
                     if (manyExposure.ImageType == CaptureSequence.ImageTypes.LIGHT) {
                         var binning = Math.Max(manyExposure.Binning.X, manyExposure.Binning.Y);
-                        var reducedExposure = (int)Math.Ceiling(exposureTime * binning);
+                        var reducedExposure = Math.Round(exposureTime * binning, 1);
                         manyExposure.ExposureTime = Math.Min(reducedExposure, manyExposure.ExposureTime);
                         continue;
                     }
@@ -94,8 +94,8 @@ namespace NINA.RBarbera.Plugin.NeocpHelper.Utility {
                 if (smartItem != null) {
                     var smartExposure = smartItem.GetTakeExposure();
                     if (smartExposure.ImageType == CaptureSequence.ImageTypes.LIGHT) {
-                        var binning = Math.Max(smartExposure.Binning.X, smartExposure.Binning.Y);
-                        smartExposure.ExposureTime = Math.Min(exposureTime, smartExposure.ExposureTime) * binning;
+                        var reducedExposure = Math.Round(exposureTime * Math.Max(smartExposure.Binning.X, smartExposure.Binning.Y), 1);
+                        smartExposure.ExposureTime = Math.Min(reducedExposure, smartExposure.ExposureTime);
                         continue;
                     }
                 }

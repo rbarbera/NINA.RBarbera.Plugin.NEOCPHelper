@@ -1,5 +1,8 @@
 ﻿# NEOCP Helper
 
+## 3.0.7.4
+- Support fractional second exposure times (0.1s precision) for more precise asteroid tracking
+
 ## 3.0.7.3
 - Fix for 3I/ATLAS and similar special comets
 
